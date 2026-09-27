@@ -1,29 +1,44 @@
 import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/common/Navbar.jsx";
-import ProtectedRoute from "./components/common/ProtectedRoute.jsx";
 
-import Home from "./pages/Home.jsx";
-import About from "./pages/About.jsx";
-import Contact from "./pages/Contact.jsx";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
-import JobListings from "./pages/JobListings.jsx";
-import JobDetails from "./pages/JobDetails.jsx";
-import CompanyProfile from "./pages/CompanyProfile.jsx";
-import Profile from "./pages/Profile.jsx";
-import UploadCV from "./pages/UploadCV.jsx";
-import CVAnalysis from "./pages/CVAnalysis.jsx";
-import ApplicationHistory from "./pages/ApplicationHistory.jsx";
-import Notifications from "./pages/Notifications.jsx";
-import NotFound from "./pages/NotFound.jsx";
-import RecruiterDashboard from "./pages/RecruiterDashboard.jsx";
-import JobSeekerDashboard from "./pages/JobSeekerDashboard.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
+// Components
+import Navbar from "./components/common/Navbar";
+import ProtectedRoute from "./components/common/ProtectedRoute";
+
+// Public pages
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Jobs from "./pages/Jobs";
+import JobDetails from "./pages/JobDetails";
+import NotFound from "./pages/NotFound";
+
+// Shared pages
+import Profile from "./pages/Profile";
+import Notifications from "./pages/Notifications";
+
+// Job seeker pages
+import JobSeekerDashboard from "./pages/JobSeekerDashboard";
+import UploadCV from "./pages/UploadCV";
+import CVAnalysis from "./pages/CVAnalysis";
+import ApplicationHistory from "./pages/ApplicationHistory";
+
+// Recruiter pages
+import RecruiterDashboard from "./pages/RecruiterDashboard";
+import CompanyProfile from "./pages/CompanyProfile";
+import PostJob from "./pages/PostJob";
+import JobApplicants from "./pages/JobApplicants";
+import EditJob from "./pages/EditJob";
+
+// Admin pages
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
+
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
@@ -31,9 +46,8 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/jobs" element={<JobListings />} />
+        <Route path="/jobs" element={<Jobs />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
-        <Route path="/companies/:id" element={<CompanyProfile />} />
 
         {/* Job seeker routes */}
         <Route
@@ -44,6 +58,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/profile"
           element={
@@ -52,6 +67,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/upload-cv"
           element={
@@ -60,6 +76,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/cv-analysis"
           element={
@@ -68,8 +85,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
-          path="/applications"
+          path="/applications/history"
           element={
             <ProtectedRoute allowedRoles={["jobseeker"]}>
               <ApplicationHistory />
@@ -87,6 +105,42 @@ function App() {
           }
         />
 
+        <Route
+          path="/recruiter/company"
+          element={
+            <ProtectedRoute allowedRoles={["recruiter"]}>
+              <CompanyProfile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recruiter/jobs/new"
+          element={
+            <ProtectedRoute allowedRoles={["recruiter"]}>
+              <PostJob />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recruiter/jobs/:jobId/edit"
+          element={
+            <ProtectedRoute allowedRoles={["recruiter"]}>
+              <EditJob />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recruiter/jobs/:jobId/applicants"
+          element={
+            <ProtectedRoute allowedRoles={["recruiter", "admin"]}>
+              <JobApplicants />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Admin routes */}
         <Route
           path="/admin/dashboard"
@@ -97,7 +151,7 @@ function App() {
           }
         />
 
-        {/* Shared */}
+        {/* Shared authenticated routes */}
         <Route
           path="/notifications"
           element={
@@ -107,6 +161,7 @@ function App() {
           }
         />
 
+        {/* Catch-all */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
