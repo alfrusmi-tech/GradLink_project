@@ -1,60 +1,45 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import * as authService from "../services/authService.js";
+import { createContext, useContext, useState, useEffect } from "react";
+import api from "../services/api";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem("gradlink_user");
-    return stored ? JSON.parse(stored) : null;
-  });
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // On mount, verify the stored token is still valid
   useEffect(() => {
-    const token = localStorage.getItem("gradlink_token");
-    if (!token) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      api
+        .get("/auth/me")
+        .then((res) => setUser(res.data.user))
+        .catch(() => {
+          localStorage.removeItem("token");
+          setUser(null);
+        })
+        .finally(() => setLoading(false));
+    } else {
       setLoading(false);
-      return;
     }
-    authService
-      .getMe()
-      .then(({ user }) => {
-        setUser(user);
-        localStorage.setItem("gradlink_user", JSON.stringify(user));
-      })
-      .catch(() => {
-        localStorage.removeItem("gradlink_token");
-        localStorage.removeItem("gradlink_user");
-        setUser(null);
-      })
-      .finally(() => setLoading(false));
   }, []);
 
-  const login = async (credentials) => {
-    const { token, user } = await authService.login(credentials);
-    localStorage.setItem("gradlink_token", token);
-    localStorage.setItem("gradlink_user", JSON.stringify(user));
-    setUser(user);
-    return user;
+  const login = async (email, password) => {
+    const res = await api.post("/auth/login", { email, password });
+    localStorage.setItem("token", res.data.token);
+    setUser(res.data.user);
+    return res.data.user;
   };
 
-  const register = async (payload) => {
-    const { token, user } = await authService.register(payload);
-    localStorage.setItem("gradlink_token", token);
-    localStorage.setItem("gradlink_user", JSON.stringify(user));
-    setUser(user);
-    return user;
+  const register = async (name, email, password, role) => {
+    const res = await api.post("/auth/register", { name, email, password, role });
+    localStorage.setItem("token", res.data.token);
+    setUser(res.data.user);
+    return res.data.user;
   };
 
-  const logout = async () => {
-    try {
-      await authService.logout();
-    } finally {
-      localStorage.removeItem("gradlink_token");
-      localStorage.removeItem("gradlink_user");
-      setUser(null);
-    }
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
   };
 
   return (
@@ -64,8 +49,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
-  return ctx;
-};
+export const useAuth = () => useContext(AuthContext);
