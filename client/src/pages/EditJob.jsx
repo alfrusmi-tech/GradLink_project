@@ -1,14 +1,5 @@
-import {
-  useEffect,
-  useState,
-} from "react";
-
-import {
-  Link,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
-
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 
 const initialForm = {
@@ -24,25 +15,30 @@ const initialForm = {
   salaryMin: "",
   salaryMax: "",
   education: "",
-  status: "open",
   deadline: "",
+  status: "open",
 };
+
+const inputClass =
+  "w-full rounded-lg border border-[#dce7dc] bg-[#fafbf8] px-4 py-3 text-sm outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20";
+
+const labelClass = "mb-2 block text-sm font-semibold text-[#172b2a]";
+
+const toList = (value) =>
+  value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
 
 const EditJob = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
 
-  const [form, setForm] =
-    useState(initialForm);
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [saving, setSaving] =
-    useState(false);
-
-  const [error, setError] =
-    useState("");
+  const [form, setForm] = useState(initialForm);
+  const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -55,73 +51,37 @@ const EditJob = () => {
         const response = await api.get(
           `/jobs/recruiter/mine/${jobId}`
         );
-
         const job = response.data;
 
-        if (!cancelled) {
-          setForm({
-            title: job.title || "",
-            description:
-              job.description || "",
+        if (cancelled) return;
 
-            responsibilities:
-              job.responsibilities?.join(
-                ", "
-              ) || "",
-
-            requiredSkills:
-              job.requiredSkills?.join(
-                ", "
-              ) || "",
-
-            preferredSkills:
-              job.preferredSkills?.join(
-                ", "
-              ) || "",
-
-            location: job.location || "",
-
-            jobType:
-              job.jobType ||
-              "full-time",
-
-            experienceLevel:
-              job.experienceLevel ||
-              "entry",
-
-            experienceYears:
-              job.experienceYears ?? "",
-
-            salaryMin:
-              job.salaryMin ?? "",
-
-            salaryMax:
-              job.salaryMax ?? "",
-
-            education:
-              job.education || "",
-
-            status:
-              job.status || "open",
-
-            deadline: job.deadline
-              ? new Date(job.deadline)
-                  .toISOString()
-                  .split("T")[0]
-              : "",
-          });
-        }
+        setForm({
+          title: job.title || "",
+          description: job.description || "",
+          responsibilities: (job.responsibilities || []).join(", "),
+          requiredSkills: (job.requiredSkills || []).join(", "),
+          preferredSkills: (job.preferredSkills || []).join(", "),
+          location: job.location || "",
+          jobType: job.jobType || "full-time",
+          experienceLevel: job.experienceLevel || "entry",
+          experienceYears: job.experienceYears ?? "",
+          salaryMin: job.salaryMin ?? "",
+          salaryMax: job.salaryMax ?? "",
+          education: job.education || "",
+          deadline: job.deadline
+            ? String(job.deadline).slice(0, 10)
+            : "",
+          status: job.status || "open",
+        });
+        setLoaded(true);
       } catch (err) {
         if (!cancelled) {
           setError(
-            err.response?.data?.message ||
-              "Failed to load job."
+            err.response?.data?.message || "Could not load this job."
           );
         }
       } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+        if (!cancelled) setLoading(false);
       }
     };
 
@@ -133,86 +93,52 @@ const EditJob = () => {
   }, [jobId]);
 
   const handleChange = (event) => {
-    const {
-      name,
-      value,
-    } = event.target;
-
-    setForm((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
   };
-
-  const toArray = (value) =>
-    value
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError("");
+
+    if (
+      form.salaryMin !== "" &&
+      form.salaryMax !== "" &&
+      Number(form.salaryMax) < Number(form.salaryMin)
+    ) {
+      setError("Maximum salary must be greater than minimum salary.");
+      return;
+    }
 
     setSaving(true);
-    setError("");
 
     try {
       await api.put(`/jobs/${jobId}`, {
         title: form.title,
         description: form.description,
-
-        responsibilities: toArray(
-          form.responsibilities
-        ),
-
-        requiredSkills: toArray(
-          form.requiredSkills
-        ),
-
-        preferredSkills: toArray(
-          form.preferredSkills
-        ),
-
+        responsibilities: toList(form.responsibilities),
+        requiredSkills: toList(form.requiredSkills),
+        preferredSkills: toList(form.preferredSkills),
         location: form.location,
         jobType: form.jobType,
-
-        experienceLevel:
-          form.experienceLevel,
-
+        experienceLevel: form.experienceLevel,
         experienceYears:
           form.experienceYears === ""
             ? 0
-            : Number(
-                form.experienceYears
-              ),
-
+            : Number(form.experienceYears),
         salaryMin:
-          form.salaryMin === ""
-            ? null
-            : Number(form.salaryMin),
-
+          form.salaryMin === "" ? null : Number(form.salaryMin),
         salaryMax:
-          form.salaryMax === ""
-            ? null
-            : Number(form.salaryMax),
-
+          form.salaryMax === "" ? null : Number(form.salaryMax),
         education: form.education,
+        deadline: form.deadline || null,
         status: form.status,
-
-        deadline:
-          form.deadline || null,
       });
 
-      navigate(
-        "/recruiter/dashboard",
-        {
-          replace: true,
-        }
-      );
+      navigate("/recruiter/dashboard", { replace: true });
     } catch (err) {
       setError(
-        err.response?.data?.message ||
-          "Failed to update job."
+        err.response?.data?.message || "Could not update this job."
       );
     } finally {
       setSaving(false);
@@ -221,373 +147,325 @@ const EditJob = () => {
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-gray-500">
+      <main
+        role="status"
+        className="min-h-screen bg-[#f7f8f4] p-10 text-center text-gray-600"
+      >
         Loading job...
-      </div>
+      </main>
+    );
+  }
+
+  if (!loaded) {
+    return (
+      <main className="min-h-screen bg-[#f7f8f4] px-6 py-16 text-center">
+        <p role="alert" className="text-red-700">
+          {error}
+        </p>
+        <Link
+          to="/recruiter/dashboard"
+          className="mt-5 inline-block font-semibold text-[#276348] hover:underline"
+        >
+          ← Back to dashboard
+        </Link>
+      </main>
     );
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Edit Job
-          </h1>
-
-          <p className="mt-1 text-sm text-gray-500">
-            Update the job information and
-            publishing status.
-          </p>
-        </div>
-
+    <main className="min-h-screen bg-[#f7f8f4] px-6 py-10 md:px-10">
+      <div className="mx-auto max-w-4xl">
         <Link
           to="/recruiter/dashboard"
-          className="text-sm font-medium text-indigo-600 hover:underline"
+          className="text-sm font-semibold text-[#276348] hover:underline"
         >
-          Back to Dashboard
+          ← Back to dashboard
         </Link>
-      </div>
 
-      {error && (
-        <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-          {error}
-        </div>
-      )}
+        <p className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+          Recruiter workspace
+        </p>
+        <h1 className="mt-2 text-3xl font-bold text-[#172b2a]">
+          Edit job
+        </h1>
+        <p className="mt-2 text-sm text-gray-600">
+          Update the role, requirements, and publishing status.
+        </p>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-5 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
-      >
-        <div>
-          <label
-            htmlFor="title"
-            className="mb-1 block text-sm font-medium text-gray-700"
+        {error && (
+          <p
+            role="alert"
+            className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700"
           >
-            Job Title
-          </label>
-
-          <input
-            id="title"
-            name="title"
-            required
-            value={form.title}
-            onChange={handleChange}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="description"
-            className="mb-1 block text-sm font-medium text-gray-700"
-          >
-            Description
-          </label>
-
-          <textarea
-            id="description"
-            name="description"
-            required
-            rows={5}
-            value={form.description}
-            onChange={handleChange}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="responsibilities"
-            className="mb-1 block text-sm font-medium text-gray-700"
-          >
-            Responsibilities
-          </label>
-
-          <input
-            id="responsibilities"
-            name="responsibilities"
-            placeholder="Develop features, Review code, Attend meetings"
-            value={form.responsibilities}
-            onChange={handleChange}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-
-          <p className="mt-1 text-xs text-gray-400">
-            Separate each responsibility
-            using commas.
+            {error}
           </p>
-        </div>
+        )}
 
-        <div>
-          <label
-            htmlFor="requiredSkills"
-            className="mb-1 block text-sm font-medium text-gray-700"
-          >
-            Required Skills
-          </label>
+        <form
+          onSubmit={handleSubmit}
+          className="mt-8 space-y-7 rounded-xl border border-[#dce7dc] bg-white p-6 md:p-8"
+        >
+          {/* Basic details */}
+          <section className="space-y-5">
+            <h2 className="border-b border-[#e5ece4] pb-3 text-lg font-bold text-[#172b2a]">
+              Job details
+            </h2>
 
-          <input
-            id="requiredSkills"
-            name="requiredSkills"
-            required
-            placeholder="React, Node.js, MongoDB"
-            value={form.requiredSkills}
-            onChange={handleChange}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
+            <div>
+              <label htmlFor="title" className={labelClass}>
+                Job title
+              </label>
+              <input
+                id="title"
+                name="title"
+                required
+                value={form.title}
+                onChange={handleChange}
+                className={inputClass}
+              />
+            </div>
 
-        <div>
-          <label
-            htmlFor="preferredSkills"
-            className="mb-1 block text-sm font-medium text-gray-700"
-          >
-            Preferred Skills
-          </label>
+            <div>
+              <label htmlFor="description" className={labelClass}>
+                Description
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                required
+                rows={6}
+                value={form.description}
+                onChange={handleChange}
+                className={inputClass}
+              />
+            </div>
 
-          <input
-            id="preferredSkills"
-            name="preferredSkills"
-            placeholder="Docker, TypeScript, AWS"
-            value={form.preferredSkills}
-            onChange={handleChange}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
+            <div>
+              <label htmlFor="responsibilities" className={labelClass}>
+                Responsibilities
+              </label>
+              <input
+                id="responsibilities"
+                name="responsibilities"
+                value={form.responsibilities}
+                onChange={handleChange}
+                placeholder="Build features, Review code, Work with designers"
+                className={inputClass}
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Separate responsibilities with commas.
+              </p>
+            </div>
+          </section>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label
-              htmlFor="location"
-              className="mb-1 block text-sm font-medium text-gray-700"
+          {/* Skills */}
+          <section className="space-y-5">
+            <h2 className="border-b border-[#e5ece4] pb-3 text-lg font-bold text-[#172b2a]">
+              Skills and requirements
+            </h2>
+
+            <div>
+              <label htmlFor="requiredSkills" className={labelClass}>
+                Required skills
+              </label>
+              <input
+                id="requiredSkills"
+                name="requiredSkills"
+                required
+                value={form.requiredSkills}
+                onChange={handleChange}
+                placeholder="React, JavaScript, CSS"
+                className={inputClass}
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Separate skills with commas.
+              </p>
+            </div>
+
+            <div>
+              <label htmlFor="preferredSkills" className={labelClass}>
+                Preferred skills
+              </label>
+              <input
+                id="preferredSkills"
+                name="preferredSkills"
+                value={form.preferredSkills}
+                onChange={handleChange}
+                placeholder="TypeScript, Docker"
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="education" className={labelClass}>
+                Education requirement
+              </label>
+              <input
+                id="education"
+                name="education"
+                value={form.education}
+                onChange={handleChange}
+                placeholder="Degree in Computer Science or related field"
+                className={inputClass}
+              />
+            </div>
+          </section>
+
+          {/* Role options */}
+          <section className="space-y-5">
+            <h2 className="border-b border-[#e5ece4] pb-3 text-lg font-bold text-[#172b2a]">
+              Role options
+            </h2>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="location" className={labelClass}>
+                  Location
+                </label>
+                <input
+                  id="location"
+                  name="location"
+                  required
+                  value={form.location}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="jobType" className={labelClass}>
+                  Job type
+                </label>
+                <select
+                  id="jobType"
+                  name="jobType"
+                  value={form.jobType}
+                  onChange={handleChange}
+                  className={inputClass}
+                >
+                  <option value="full-time">Full-time</option>
+                  <option value="part-time">Part-time</option>
+                  <option value="contract">Contract</option>
+                  <option value="internship">Internship</option>
+                  <option value="remote">Remote</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="experienceLevel" className={labelClass}>
+                  Experience level
+                </label>
+                <select
+                  id="experienceLevel"
+                  name="experienceLevel"
+                  value={form.experienceLevel}
+                  onChange={handleChange}
+                  className={inputClass}
+                >
+                  <option value="entry">Entry</option>
+                  <option value="junior">Junior</option>
+                  <option value="mid">Mid</option>
+                  <option value="senior">Senior</option>
+                  <option value="lead">Lead</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="experienceYears" className={labelClass}>
+                  Years of experience
+                </label>
+                <input
+                  id="experienceYears"
+                  name="experienceYears"
+                  type="number"
+                  min="0"
+                  value={form.experienceYears}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="salaryMin" className={labelClass}>
+                  Minimum salary
+                </label>
+                <input
+                  id="salaryMin"
+                  name="salaryMin"
+                  type="number"
+                  min="0"
+                  value={form.salaryMin}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="salaryMax" className={labelClass}>
+                  Maximum salary
+                </label>
+                <input
+                  id="salaryMax"
+                  name="salaryMax"
+                  type="number"
+                  min="0"
+                  value={form.salaryMax}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="deadline" className={labelClass}>
+                  Application deadline
+                </label>
+                <input
+                  id="deadline"
+                  name="deadline"
+                  type="date"
+                  value={form.deadline}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="status" className={labelClass}>
+                  Job status
+                </label>
+                <select
+                  id="status"
+                  name="status"
+                  value={form.status}
+                  onChange={handleChange}
+                  className={inputClass}
+                >
+                  <option value="open">Open</option>
+                  <option value="closed">Closed</option>
+                  <option value="draft">Draft</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <div className="flex flex-wrap justify-end gap-3 border-t border-[#e5ece4] pt-6">
+            <Link
+              to="/recruiter/dashboard"
+              className="rounded-lg border border-[#cddbd0] px-6 py-3 text-sm font-semibold text-[#172b2a] hover:bg-[#edf3e9]"
             >
-              Location
-            </label>
-
-            <input
-              id="location"
-              name="location"
-              required
-              value={form.location}
-              onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+              Cancel
+            </Link>
+            <button
+              type="submit"
+              disabled={saving}
+              className="rounded-lg bg-[#172b2a] px-6 py-3 text-sm font-semibold text-white hover:bg-[#347d61] disabled:opacity-60"
+            >
+              {saving ? "Saving..." : "Save changes"}
+            </button>
           </div>
-
-          <div>
-            <label
-              htmlFor="jobType"
-              className="mb-1 block text-sm font-medium text-gray-700"
-            >
-              Job Type
-            </label>
-
-            <select
-              id="jobType"
-              name="jobType"
-              value={form.jobType}
-              onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <option value="full-time">
-                Full-time
-              </option>
-              <option value="part-time">
-                Part-time
-              </option>
-              <option value="contract">
-                Contract
-              </option>
-              <option value="internship">
-                Internship
-              </option>
-              <option value="remote">
-                Remote
-              </option>
-            </select>
-          </div>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label
-              htmlFor="experienceLevel"
-              className="mb-1 block text-sm font-medium text-gray-700"
-            >
-              Experience Level
-            </label>
-
-            <select
-              id="experienceLevel"
-              name="experienceLevel"
-              value={form.experienceLevel}
-              onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <option value="entry">
-                Entry
-              </option>
-              <option value="junior">
-                Junior
-              </option>
-              <option value="mid">
-                Mid
-              </option>
-              <option value="senior">
-                Senior
-              </option>
-              <option value="lead">
-                Lead
-              </option>
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="experienceYears"
-              className="mb-1 block text-sm font-medium text-gray-700"
-            >
-              Experience Years
-            </label>
-
-            <input
-              id="experienceYears"
-              type="number"
-              min="0"
-              name="experienceYears"
-              value={form.experienceYears}
-              onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label
-              htmlFor="salaryMin"
-              className="mb-1 block text-sm font-medium text-gray-700"
-            >
-              Minimum Salary
-            </label>
-
-            <input
-              id="salaryMin"
-              type="number"
-              min="0"
-              name="salaryMin"
-              value={form.salaryMin}
-              onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="salaryMax"
-              className="mb-1 block text-sm font-medium text-gray-700"
-            >
-              Maximum Salary
-            </label>
-
-            <input
-              id="salaryMax"
-              type="number"
-              min="0"
-              name="salaryMax"
-              value={form.salaryMax}
-              onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label
-            htmlFor="education"
-            className="mb-1 block text-sm font-medium text-gray-700"
-          >
-            Education Requirement
-          </label>
-
-          <input
-            id="education"
-            name="education"
-            placeholder="BSc in Computer Science or related field"
-            value={form.education}
-            onChange={handleChange}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label
-              htmlFor="deadline"
-              className="mb-1 block text-sm font-medium text-gray-700"
-            >
-              Application Deadline
-            </label>
-
-            <input
-              id="deadline"
-              type="date"
-              name="deadline"
-              value={form.deadline}
-              onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="status"
-              className="mb-1 block text-sm font-medium text-gray-700"
-            >
-              Job Status
-            </label>
-
-            <select
-              id="status"
-              name="status"
-              value={form.status}
-              onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <option value="open">
-                Open
-              </option>
-              <option value="closed">
-                Closed
-              </option>
-              <option value="draft">
-                Draft
-              </option>
-            </select>
-          </div>
-        </div>
-
-        <div className="flex flex-col-reverse gap-3 border-t border-gray-100 pt-5 sm:flex-row sm:justify-end">
-          <Link
-            to="/recruiter/dashboard"
-            className="rounded-md border border-gray-300 px-5 py-2.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Cancel
-          </Link>
-
-          <button
-            type="submit"
-            disabled={saving}
-            className="rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {saving
-              ? "Saving..."
-              : "Save Changes"}
-          </button>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </main>
   );
 };
 

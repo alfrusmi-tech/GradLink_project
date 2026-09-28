@@ -1,84 +1,150 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [search, setSearch] = useState("");
 
   useEffect(() => {
     api
       .get("/jobs")
-      .then((res) => setJobs(res.data))
-      .catch(() => setError("Failed to load jobs"))
-      .finally(() => setLoading(false));
+      .then((response) => {
+        setJobs(Array.isArray(response.data) ? response.data : []);
+      })
+      .catch(() => {
+        setError("Could not load jobs. Please try again later.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
-  const filteredJobs = jobs.filter((job) =>
-    job.title.toLowerCase().includes(search.toLowerCase()) ||
-    job.location.toLowerCase().includes(search.toLowerCase()) ||
-    job.requiredSkills?.some((s) => s.toLowerCase().includes(search.toLowerCase()))
-  );
+  const query = search.trim().toLowerCase();
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Loading jobs...</div>;
-  if (error) return <div className="p-8 text-center text-red-600">{error}</div>;
+  const filteredJobs = jobs.filter((job) => {
+    const searchableText = [
+      job.title,
+      job.location,
+      job.company?.name,
+      ...(job.requiredSkills || []),
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+    return searchableText.includes(query);
+  });
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Browse Jobs</h1>
-
-      <input
-        type="text"
-        placeholder="Search by title, location, or skill..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full rounded-md border border-gray-300 px-4 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      />
-
-      {filteredJobs.length === 0 ? (
-        <p className="text-gray-500 text-center py-12">No jobs match your search.</p>
-      ) : (
-        <div className="space-y-4">
-          {filteredJobs.map((job) => (
-            <Link
-              key={job._id}
-              to={`/jobs/${job._id}`}
-              className="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-900">{job.title}</h2>
-                  <p className="text-sm text-gray-600 mt-1">
-                    {job.company?.name || "Unknown Company"} · {job.location}
-                  </p>
-                </div>
-                <span className="text-xs font-medium bg-indigo-50 text-indigo-700 px-2 py-1 rounded-full capitalize">
-                  {job.jobType}
-                </span>
-              </div>
-
-              <div className="flex flex-wrap gap-2 mt-3">
-                {job.requiredSkills?.slice(0, 5).map((skill) => (
-                  <span
-                    key={skill}
-                    className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-
-              <p className="text-xs text-gray-400 mt-3 capitalize">
-                {job.experienceLevel} level
-                {job.deadline && ` · Apply by ${new Date(job.deadline).toLocaleDateString()}`}
-              </p>
-            </Link>
-          ))}
+    <main className="min-h-screen bg-[#f7f8f4]">
+      <section className="bg-[#193b32] px-6 py-16 text-white md:px-10">
+        <div className="mx-auto max-w-7xl">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#b9e3c5]">
+            Opportunities
+          </p>
+          <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
+            Find your next role.
+          </h1>
+          <p className="mt-4 max-w-xl leading-7 text-[#c8dcd0]">
+            Explore jobs and discover opportunities that match your interests
+            and skills.
+          </p>
         </div>
-      )}
-    </div>
+      </section>
+
+      <div className="mx-auto max-w-7xl px-6 py-10 md:px-10">
+        <label
+          htmlFor="job-search"
+          className="mb-2 block text-sm font-semibold text-[#172b2a]"
+        >
+          Search jobs
+        </label>
+        <input
+          id="job-search"
+          type="search"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Search by title, company, location, or skill"
+          className="w-full rounded-xl border border-[#dce7dc] bg-white px-5 py-4 text-sm outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20"
+        />
+
+        <div className="mb-6 mt-10 flex items-end justify-between gap-4">
+          <h2 className="text-2xl font-bold text-[#172b2a]">Explore jobs</h2>
+          {!loading && !error && (
+            <span className="text-sm text-gray-500">
+              {filteredJobs.length} roles found
+            </span>
+          )}
+        </div>
+
+        {loading && (
+          <p className="rounded-xl bg-white p-8 text-gray-600">
+            Loading jobs...
+          </p>
+        )}
+
+        {error && (
+          <p role="alert" className="rounded-xl bg-red-50 p-8 text-red-700">
+            {error}
+          </p>
+        )}
+
+        {!loading && !error && filteredJobs.length === 0 && (
+          <div className="rounded-xl border border-[#dce7dc] bg-white p-10 text-center">
+            <h3 className="text-lg font-bold">No jobs found</h3>
+            <p className="mt-2 text-gray-600">
+              {search
+                ? "Try another search term."
+                : "There are no open jobs right now. Check back soon."}
+            </p>
+          </div>
+        )}
+
+        {!loading && !error && filteredJobs.length > 0 && (
+          <div className="grid gap-4">
+            {filteredJobs.map((job) => (
+              <Link
+                key={job._id}
+                to={`/jobs/${job._id}`}
+                className="block rounded-xl border border-[#dce7dc] bg-white p-6 transition hover:-translate-y-1 hover:border-[#83b99a] hover:shadow-lg"
+              >
+                <div className="flex justify-between gap-4">
+                  <div>
+                    <h3 className="text-lg font-bold text-[#172b2a]">
+                      {job.title}
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-600">
+                      {job.company?.name || "Company"} ·{" "}
+                      {job.location || "Location not specified"}
+                    </p>
+                  </div>
+                  <span className="text-xl text-[#347d61]">↗</span>
+                </div>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {job.jobType && (
+                    <span className="rounded-md bg-[#e6f3ea] px-3 py-1.5 text-xs font-medium capitalize text-[#276348]">
+                      {job.jobType}
+                    </span>
+                  )}
+                  {job.requiredSkills?.slice(0, 4).map((skill) => (
+                    <span
+                      key={skill}
+                      className="rounded-md bg-[#f2f5f0] px-3 py-1.5 text-xs text-[#52645b]"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </main>
   );
 };
 

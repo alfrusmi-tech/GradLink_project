@@ -1,196 +1,247 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
+
+const emptyForm = {
+  name: "",
+  description: "",
+  industry: "",
+  website: "",
+  location: "",
+  companySize: "",
+  foundedYear: "",
+};
 
 const CompanyProfile = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: "",
-    description: "",
-    industry: "",
-    website: "",
-    location: "",
-    companySize: "",
-    foundedYear: "",
-  });
-  const [existingCompanyId, setExistingCompanyId] = useState(null);
+  const [form, setForm] = useState(emptyForm);
+  const [companyId, setCompanyId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    // If the recruiter already has a company, fetch and prefill the form
-    if (user?.company) {
-      api
-        .get(`/companies/${user.company}`)
-        .then((res) => {
-          const c = res.data;
-          setExistingCompanyId(c._id);
-          setForm({
-            name: c.name || "",
-            description: c.description || "",
-            industry: c.industry || "",
-            website: c.website || "",
-            location: c.location || "",
-            companySize: c.companySize || "",
-            foundedYear: c.foundedYear || "",
-          });
-        })
-        .catch(() => setError("Failed to load company profile"))
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
-  }, [user]);
+    const id =
+      typeof user?.company === "object"
+        ? user.company?._id
+        : user?.company;
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+
+    api
+      .get(`/companies/${id}`)
+      .then((response) => {
+        const company = response.data;
+        setCompanyId(company._id);
+        setForm({
+          name: company.name || "",
+          description: company.description || "",
+          industry: company.industry || "",
+          website: company.website || "",
+          location: company.location || "",
+          companySize: company.companySize || "",
+          foundedYear: company.foundedYear || "",
+        });
+      })
+      .catch(() => setError("Could not load your company profile."))
+      .finally(() => setLoading(false));
+  }, [user?.company]);
+
+  const handleChange = (event) => {
+    setForm((current) => ({
+      ...current,
+      [event.target.name]: event.target.value,
+    }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError("");
-    setSuccess(false);
     setSaving(true);
 
     const payload = {
       ...form,
-      foundedYear: form.foundedYear ? Number(form.foundedYear) : undefined,
+      foundedYear: form.foundedYear
+        ? Number(form.foundedYear)
+        : undefined,
     };
 
     try {
-      if (existingCompanyId) {
-        await api.put(`/companies/${existingCompanyId}`, payload);
+      if (companyId) {
+        await api.put(`/companies/${companyId}`, payload);
       } else {
         await api.post("/companies", payload);
       }
-      setSuccess(true);
-      setTimeout(() => navigate("/recruiter/dashboard"), 1000);
+
+      navigate("/recruiter/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to save company profile");
+      setError(
+        err.response?.data?.message || "Could not save company profile."
+      );
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Loading...</div>;
+  const inputClass =
+    "w-full rounded-lg border border-[#dce7dc] bg-[#fafbf8] px-4 py-3 outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20";
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-2">
-        {existingCompanyId ? "Edit Company Profile" : "Create Company Profile"}
-      </h1>
-      <p className="text-sm text-gray-500 mb-6">
-        {existingCompanyId
-          ? "Update your company details below."
-          : "You need a company profile before you can post jobs."}
-      </p>
+    <main className="min-h-screen bg-[#f7f8f4] px-6 py-10 md:px-10">
+      <div className="mx-auto max-w-3xl">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+          Recruiter workspace
+        </p>
+        <h1 className="mt-2 text-3xl font-bold text-[#172b2a]">
+          {companyId ? "Edit company profile" : "Create company profile"}
+        </h1>
+        <p className="mt-2 text-sm text-gray-600">
+          Add the details candidates should know about your company.
+        </p>
 
-      {error && (
-        <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-3">
-          {error}
-        </div>
-      )}
-      {success && (
-        <div className="mb-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md p-3">
-          Company profile saved! Redirecting...
-        </div>
-      )}
+        {error && (
+          <p
+            role="alert"
+            className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+          >
+            {error}
+          </p>
+        )}
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
-          <input
-            name="name"
-            required
-            value={form.name}
-            onChange={handleChange}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-          <textarea
-            name="description"
-            rows={4}
-            value={form.description}
-            onChange={handleChange}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Industry</label>
-            <input
-              name="industry"
-              value={form.industry}
-              onChange={handleChange}
-              placeholder="Tech, Finance, Healthcare..."
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+        {loading ? (
+          <div className="mt-8 rounded-xl bg-white p-8">
+            Loading company profile...
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-            <input
-              name="location"
-              value={form.location}
-              onChange={handleChange}
-              placeholder="Colombo, Sri Lanka"
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-        </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="mt-8 space-y-5 rounded-xl border border-[#dce7dc] bg-white p-6 md:p-8"
+          >
+            <div>
+              <label htmlFor="company-name" className="mb-2 block text-sm font-semibold">
+                Company name
+              </label>
+              <input
+                id="company-name"
+                name="name"
+                required
+                value={form.name}
+                onChange={handleChange}
+                className={inputClass}
+              />
+            </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Company Size</label>
-            <input
-              name="companySize"
-              value={form.companySize}
-              onChange={handleChange}
-              placeholder="1-10, 50-100, 500+"
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Founded Year</label>
-            <input
-              type="number"
-              name="foundedYear"
-              value={form.foundedYear}
-              onChange={handleChange}
-              placeholder="2015"
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-        </div>
+            <div>
+              <label htmlFor="company-description" className="mb-2 block text-sm font-semibold">
+                Description
+              </label>
+              <textarea
+                id="company-description"
+                name="description"
+                rows={5}
+                value={form.description}
+                onChange={handleChange}
+                placeholder="What does your company do?"
+                className={inputClass}
+              />
+            </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
-          <input
-            name="website"
-            value={form.website}
-            onChange={handleChange}
-            placeholder="https://example.com"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="company-industry" className="mb-2 block text-sm font-semibold">
+                  Industry
+                </label>
+                <input
+                  id="company-industry"
+                  name="industry"
+                  value={form.industry}
+                  onChange={handleChange}
+                  placeholder="Technology"
+                  className={inputClass}
+                />
+              </div>
 
-        <button
-          type="submit"
-          disabled={saving}
-          className="w-full bg-indigo-600 text-white rounded-md py-2 font-medium hover:bg-indigo-700 disabled:opacity-50"
-        >
-          {saving ? "Saving..." : existingCompanyId ? "Update Company" : "Create Company"}
-        </button>
-      </form>
-    </div>
+              <div>
+                <label htmlFor="company-location" className="mb-2 block text-sm font-semibold">
+                  Location
+                </label>
+                <input
+                  id="company-location"
+                  name="location"
+                  value={form.location}
+                  onChange={handleChange}
+                  placeholder="Colombo, Sri Lanka"
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="company-size" className="mb-2 block text-sm font-semibold">
+                  Company size
+                </label>
+                <input
+                  id="company-size"
+                  name="companySize"
+                  value={form.companySize}
+                  onChange={handleChange}
+                  placeholder="11–50 employees"
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="company-year" className="mb-2 block text-sm font-semibold">
+                  Founded year
+                </label>
+                <input
+                  id="company-year"
+                  name="foundedYear"
+                  type="number"
+                  min="1800"
+                  value={form.foundedYear}
+                  onChange={handleChange}
+                  placeholder="2020"
+                  className={inputClass}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="company-website" className="mb-2 block text-sm font-semibold">
+                Website
+              </label>
+              <input
+                id="company-website"
+                name="website"
+                type="url"
+                value={form.website}
+                onChange={handleChange}
+                placeholder="https://example.com"
+                className={inputClass}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={saving}
+              className="rounded-lg bg-[#172b2a] px-6 py-3 text-sm font-semibold text-white hover:bg-[#347d61] disabled:opacity-60"
+            >
+              {saving
+                ? "Saving..."
+                : companyId
+                  ? "Update company"
+                  : "Create company"}
+            </button>
+          </form>
+        )}
+      </div>
+    </main>
   );
 };
 

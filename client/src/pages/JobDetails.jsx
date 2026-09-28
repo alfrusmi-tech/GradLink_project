@@ -291,7 +291,7 @@ const JobDetails = () => {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600" />
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#b6d5be] border-t-[#245d4b]" />
 
           <p className="mt-3 text-sm text-gray-500">
             Loading job details...
@@ -326,10 +326,10 @@ const JobDetails = () => {
   }
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-8">
+    <main className="mx-auto min-h-screen max-w-4xl px-4 py-8">
       <Link
         to="/jobs"
-        className="mb-5 inline-flex text-sm font-medium text-indigo-600 hover:text-indigo-700"
+        className="mb-5 inline-flex text-sm font-medium text-[#276348] hover:text-[#276348]"
       >
         ← Back to jobs
       </Link>
@@ -349,7 +349,7 @@ const JobDetails = () => {
             </p>
           </div>
 
-          <span className="w-fit rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold capitalize text-indigo-700">
+          <span className="w-fit rounded-full bg-[#e6f3ea] px-3 py-1 text-xs font-semibold capitalize text-[#276348]">
             {job.jobType}
           </span>
         </div>
@@ -468,7 +468,7 @@ const JobDetails = () => {
                 (skill) => (
                   <span
                     key={skill}
-                    className="rounded-full bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700"
+                    className="rounded-full bg-[#e6f3ea] px-3 py-1 text-sm font-medium text-[#276348]"
                   >
                     {skill}
                   </span>
@@ -521,8 +521,8 @@ const JobDetails = () => {
             </h2>
 
             {!user && (
-              <div className="mt-4 rounded-xl border border-indigo-200 bg-indigo-50 p-4">
-                <p className="text-sm text-indigo-800">
+              <div className="mt-4 rounded-xl border border-[#b6d5be] bg-[#e6f3ea] p-4">
+                <p className="text-sm text-[#1d4e3d]">
                   You must log in as a
                   job seeker before
                   applying.
@@ -540,7 +540,7 @@ const JobDetails = () => {
                       }
                     )
                   }
-                  className="mt-3 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+                  className="mt-3 rounded-lg bg-[#245d4b] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1a4e3c]"
                 >
                   Log in to apply
                 </button>
@@ -629,7 +629,7 @@ const JobDetails = () => {
                       }
                       rows={6}
                       maxLength={2000}
-                      className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+                      className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-700 outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#b6d5be]"
                       placeholder="Briefly explain why you are suitable for this position..."
                     />
 
@@ -659,7 +659,7 @@ const JobDetails = () => {
                           applying ||
                           !canApply
                         }
-                        className="rounded-lg bg-indigo-600 px-6 py-3 font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="rounded-lg bg-[#245d4b] px-6 py-3 font-semibold text-white hover:bg-[#1a4e3c] disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         {applying
                           ? "Submitting application..."
@@ -668,7 +668,7 @@ const JobDetails = () => {
 
                       <Link
                         to={`/cv-analysis?jobId=${job._id}`}
-                        className="rounded-lg border border-indigo-200 px-6 py-3 text-center font-semibold text-indigo-700 hover:bg-indigo-50"
+                        className="rounded-lg border border-[#b6d5be] px-6 py-3 text-center font-semibold text-[#276348] hover:bg-[#e6f3ea]"
                       >
                         Analyze CV first
                       </Link>
@@ -694,3 +694,4 @@ const JobDetails = () => {
 };
 
 export default JobDetails;
+

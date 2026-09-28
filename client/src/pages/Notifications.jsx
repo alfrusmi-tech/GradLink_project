@@ -34,7 +34,7 @@ const typeColors = {
   application_rejected:
     "bg-red-50 text-red-700",
   new_job_posted:
-    "bg-indigo-50 text-indigo-700",
+    "bg-[#e6f3ea] text-[#276348]",
   general:
     "bg-gray-100 text-gray-700",
 };
@@ -266,7 +266,7 @@ const Notifications = () => {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
+    <div className="mx-auto min-h-screen max-w-3xl px-4 py-8">
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
@@ -291,7 +291,7 @@ const Notifications = () => {
                 type="button"
                 onClick={markAllAsRead}
                 disabled={actionLoading}
-                className="rounded-lg border border-indigo-200 px-4 py-2 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-lg border border-[#b6d5be] px-4 py-2 text-sm font-semibold text-[#276348] transition hover:bg-[#e6f3ea] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Mark all as read
               </button>
@@ -341,7 +341,7 @@ const Notifications = () => {
                 className={`rounded-xl border p-4 transition ${
                   notification.isRead
                     ? "border-gray-200 bg-white"
-                    : "border-indigo-200 bg-indigo-50/50"
+                    : "border-[#b6d5be] bg-[#e6f3ea]/50"
                 }`}
               >
                 <div className="flex items-start justify-between gap-4">
@@ -373,7 +373,7 @@ const Notifications = () => {
 
                       {!notification.isRead && (
                         <span
-                          className="mt-1 h-2.5 w-2.5 flex-shrink-0 rounded-full bg-indigo-600"
+                          className="mt-1 h-2.5 w-2.5 flex-shrink-0 rounded-full bg-[#245d4b]"
                           aria-label="Unread"
                         />
                       )}
@@ -387,7 +387,7 @@ const Notifications = () => {
 
                     {notification
                       .relatedJob?.title && (
-                      <p className="mt-2 text-sm font-semibold text-indigo-700">
+                      <p className="mt-2 text-sm font-semibold text-[#276348]">
                         {
                           notification
                             .relatedJob
@@ -427,3 +427,4 @@ const Notifications = () => {
 };
 
 export default Notifications;
+

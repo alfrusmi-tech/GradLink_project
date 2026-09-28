@@ -1,99 +1,209 @@
-import { Link, useNavigate } from "react-router-dom";
+
+import { useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const closeMenu = () => setMenuOpen(false);
+
   const handleLogout = () => {
     logout();
+    closeMenu();
     navigate("/login");
   };
 
+  const linkClass = ({ isActive }) =>
+    `text-sm font-semibold transition hover:text-[#347d61] ${
+      isActive ? "text-[#347d61]" : "text-[#52645b]"
+    }`;
+
   return (
-    <nav className="bg-white border-b border-gray-200">
-      <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-16">
-        <Link to="/" className="text-xl font-bold text-indigo-600">
-          GradLink
+    <header className="relative z-20 border-b border-[#e2e9e0] bg-white">
+      <div className="mx-auto flex min-h-[72px] max-w-7xl items-center px-6 md:px-10">
+        <Link
+          to="/"
+          onClick={closeMenu}
+          className="text-2xl font-extrabold tracking-tight text-[#172b2a]"
+        >
+          GradLink<span className="text-[#347d61]">.</span>
         </Link>
 
-        <div className="flex items-center gap-6">
-          <Link
-            to="/jobs"
-            className="text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-md px-2 py-1.5 transition-colors duration-200"
-          >
+        {/* Desktop navigation */}
+        <nav
+          className="ml-auto hidden items-center gap-7 md:flex"
+          aria-label="Main navigation"
+        >
+          <NavLink to="/jobs" className={linkClass}>
             Browse Jobs
-          </Link>
+          </NavLink>
 
-          {!user && (
-            <>
-              <Link
-                to="/login"
-                className="text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-md px-2 py-1.5 transition-colors duration-200"
-              >
-                Log in
-              </Link>
-
-              <Link
-                to="/register"
-                className="bg-indigo-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-indigo-700 transition-colors duration-200"
-              >
-                Register
-              </Link>
-            </>
-          )}
+          <NavLink to="/about" className={linkClass}>
+            About Us
+          </NavLink>
 
           {user?.role === "jobseeker" && (
             <>
-              <Link
-                to="/applications/history"
-                className="text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-md px-2 py-1.5 transition-colors duration-200"
-              >
-                My Applications
-              </Link>
-
-              <Link
-                to="/upload-cv"
-                className="text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-md px-2 py-1.5 transition-colors duration-200"
-              >
+              <NavLink to="/jobseeker/dashboard" className={linkClass}>
+                Dashboard
+              </NavLink>
+              <NavLink to="/applications/history" className={linkClass}>
+                Applications
+              </NavLink>
+              <NavLink to="/upload-cv" className={linkClass}>
                 My CV
-              </Link>
+              </NavLink>
             </>
           )}
 
           {user?.role === "recruiter" && (
             <>
-              <Link
-                to="/recruiter/dashboard"
-                className="text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-md px-2 py-1.5 transition-colors duration-200"
-              >
+              <NavLink to="/recruiter/dashboard" className={linkClass}>
                 Dashboard
-              </Link>
-
-              <Link
-                to="/recruiter/company"
-                className="text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-md px-2 py-1.5 transition-colors duration-200"
-              >
+              </NavLink>
+              <NavLink to="/recruiter/company" className={linkClass}>
                 Company
-              </Link>
+              </NavLink>
             </>
           )}
 
-          {user && (
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-500">Hi, {user.name.split(" ")[0]}</span>
-
-              <button
-                onClick={handleLogout}
-                className="text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 border border-gray-300 rounded-md px-3 py-1.5 transition-colors duration-200"
-              >
-                Logout
-              </button>
-            </div>
+          {user?.role === "admin" && (
+            <NavLink to="/admin/dashboard" className={linkClass}>
+              Dashboard
+            </NavLink>
           )}
-        </div>
+
+          {user ? (
+            <>
+              <NavLink to="/profile" className={linkClass}>
+                Profile
+              </NavLink>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-lg border border-[#cddbd0] px-4 py-2 text-sm font-semibold text-[#172b2a] hover:bg-[#edf3e9]"
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <NavLink to="/login" className={linkClass}>
+              Log in
+            </NavLink>
+          )}
+        </nav>
+
+        {/* Mobile menu button */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-navigation"
+          className="ml-auto rounded-lg border border-[#dce7dc] px-3 py-2 text-xl md:hidden"
+        >
+          {menuOpen ? "✕" : "☰"}
+        </button>
       </div>
-    </nav>
+
+      {/* Mobile navigation */}
+      {menuOpen && (
+        <nav
+          id="mobile-navigation"
+          className="flex flex-col gap-5 border-t border-[#e2e9e0] bg-white px-6 py-6 md:hidden"
+          aria-label="Mobile navigation"
+        >
+          <NavLink to="/jobs" onClick={closeMenu} className={linkClass}>
+            Browse Jobs
+          </NavLink>
+
+          <NavLink to="/about" onClick={closeMenu} className={linkClass}>
+            About Us
+          </NavLink>
+
+          {user?.role === "jobseeker" && (
+            <>
+              <NavLink
+                to="/jobseeker/dashboard"
+                onClick={closeMenu}
+                className={linkClass}
+              >
+                Dashboard
+              </NavLink>
+              <NavLink
+                to="/applications/history"
+                onClick={closeMenu}
+                className={linkClass}
+              >
+                Applications
+              </NavLink>
+              <NavLink
+                to="/upload-cv"
+                onClick={closeMenu}
+                className={linkClass}
+              >
+                My CV
+              </NavLink>
+            </>
+          )}
+
+          {user?.role === "recruiter" && (
+            <>
+              <NavLink
+                to="/recruiter/dashboard"
+                onClick={closeMenu}
+                className={linkClass}
+              >
+                Dashboard
+              </NavLink>
+              <NavLink
+                to="/recruiter/company"
+                onClick={closeMenu}
+                className={linkClass}
+              >
+                Company
+              </NavLink>
+            </>
+          )}
+
+          {user?.role === "admin" && (
+            <NavLink
+              to="/admin/dashboard"
+              onClick={closeMenu}
+              className={linkClass}
+            >
+              Dashboard
+            </NavLink>
+          )}
+
+          {user ? (
+            <>
+              <NavLink
+                to="/profile"
+                onClick={closeMenu}
+                className={linkClass}
+              >
+                Profile
+              </NavLink>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="self-start rounded-lg bg-[#172b2a] px-5 py-2.5 text-sm font-semibold text-white"
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <NavLink to="/login" onClick={closeMenu} className={linkClass}>
+              Log in
+            </NavLink>
+          )}
+        </nav>
+      )}
+    </header>
   );
 };
 
