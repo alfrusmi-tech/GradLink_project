@@ -2,173 +2,128 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif" }}>
-      {/* HERO */}
-      <section className="bg-[#12203D] text-white relative overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-center">
+    <main className="bg-[#f7f8f4] text-[#172b2a]">
+      {/* Hero */}
+      <section className="bg-[#edf3e9]">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 md:grid-cols-2 md:px-10 lg:py-28">
           <div>
-            <p
-              className="text-[#E8B84B] text-sm font-semibold tracking-wide mb-4"
-              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-            >
-              GRADLINK
+            <p className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+              Your career starts here
             </p>
-            <h1
-              className="text-4xl md:text-5xl leading-tight mb-5"
-              style={{ fontFamily: "'Fraunces', serif", fontWeight: 600 }}
-            >
-              Where your skills meet the right opening.
+
+            <h1 className="max-w-xl text-5xl font-bold leading-tight tracking-tight md:text-6xl">
+              Find a job that fits{" "}
+              <span className="text-[#347d61]">your skills.</span>
             </h1>
-            <p className="text-[#B7C2D6] text-base mb-8 max-w-md">
-              Upload your CV once. GradLink reads your skills and shows you
-              exactly how well you match every job — before you apply.
+
+            <p className="mt-6 max-w-lg text-base leading-8 text-[#60716a]">
+              Explore opportunities, analyze how your CV matches a role,
+              and track your applications in one place.
             </p>
-            <div className="flex flex-wrap gap-3">
+
+            <div className="mt-9 flex flex-wrap gap-4">
               <Link
-                to="/register"
-                className="bg-indigo-600 text-white rounded-md px-6 py-3 text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#12203D] focus:ring-indigo-400 transition"
+                to="/jobs"
+                className="rounded-lg bg-[#172b2a] px-6 py-3 font-semibold text-white transition hover:bg-[#347d61]"
               >
-                I'm looking for a job
+                Explore jobs →
               </Link>
               <Link
                 to="/register"
-                className="border border-white/25 text-white rounded-md px-6 py-3 text-sm font-medium hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#12203D] focus:ring-white/40 transition"
+                className="rounded-lg border border-[#9db7a6] px-6 py-3 font-semibold text-[#172b2a] transition hover:bg-white"
               >
-                I'm hiring
+                Create an account
               </Link>
             </div>
           </div>
 
-          {/* Signature element: live-looking match preview */}
-          <div className="bg-white text-gray-900 rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-auto md:ml-auto md:mr-0">
-            <p className="text-xs font-medium text-[#5B6B82] mb-3">
-              Backend Developer · Acme Corp
+          {/* Illustration: clearly an example, not live CV data */}
+          <div className="rounded-2xl bg-[#193b32] p-5 shadow-2xl md:p-8">
+            <div className="rounded-xl bg-white p-6">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-widest text-[#347d61]">
+                  CV match preview
+                </span>
+                <span className="rounded-full bg-[#edf3e9] px-3 py-1 text-xs text-[#347d61]">
+                  Example
+                </span>
+              </div>
+
+              <h2 className="mt-6 text-2xl font-bold">
+                Frontend Developer
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">
+                Sample opportunity · Colombo
+              </p>
+
+              <div className="mt-7 border-t border-gray-200 pt-6">
+                <p className="text-sm font-semibold">Skills you can highlight</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {["React", "JavaScript", "UI design"].map((skill) => (
+                    <span
+                      key={skill}
+                      className="rounded-md bg-[#e6f3ea] px-3 py-2 text-xs font-medium text-[#276348]"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <p className="mt-7 text-sm leading-6 text-gray-600">
+                See how your experience relates to a role before you apply.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Two user paths */}
+      <section className="mx-auto max-w-7xl px-6 py-20 md:px-10">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+          One platform, two paths
+        </p>
+        <h2 className="mt-3 text-3xl font-bold md:text-4xl">
+          Move forward with GradLink
+        </h2>
+
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <div className="rounded-2xl border border-[#dce7dc] bg-white p-8">
+            <span className="text-sm font-bold text-[#347d61]">
+              FOR GRADUATES
+            </span>
+            <h3 className="mt-5 text-2xl font-bold">Find your next step.</h3>
+            <p className="mt-3 leading-7 text-gray-600">
+              Browse jobs, upload your CV, check your skills against a role,
+              and follow your applications.
             </p>
-
-            <div
-              className="flex flex-wrap gap-2 mb-5"
-              style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-            >
-              <span className="text-xs bg-[#2FA793]/10 text-[#1F7A69] px-2 py-1 rounded-md flex items-center gap-1">
-                ✓ node.js
-              </span>
-              <span className="text-xs bg-[#2FA793]/10 text-[#1F7A69] px-2 py-1 rounded-md flex items-center gap-1">
-                ✓ mongodb
-              </span>
-              <span className="text-xs bg-gray-100 text-gray-400 px-2 py-1 rounded-md line-through">
-                express
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
-                <div className="bg-[#2FA793] h-2 rounded-full" style={{ width: "66%" }} />
-              </div>
-              <span className="text-sm font-semibold text-gray-900">66%</span>
-            </div>
-            <p className="text-xs text-[#5B6B82] mt-2">match to this role</p>
-          </div>
-        </div>
-      </section>
-
-      {/* TWO PATHS */}
-      <section className="bg-[#F7F8FA] py-16">
-        <div className="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-2xl border border-gray-200 p-8">
-            <h2
-              className="text-xl mb-3 text-gray-900"
-              style={{ fontFamily: "'Fraunces', serif", fontWeight: 600 }}
-            >
-              For graduates
-            </h2>
-            <ul className="text-sm text-gray-600 space-y-2 mb-6">
-              <li>Upload your CV and get your skills read automatically</li>
-              <li>See a match percentage before you apply, not after</li>
-              <li>Track every application's status in one place</li>
-            </ul>
             <Link
               to="/register"
-              className="text-sm font-medium text-indigo-600 hover:underline"
+              className="mt-7 inline-block font-semibold text-[#276348] hover:underline"
             >
-              Create a graduate account →
+              Join as a graduate →
             </Link>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-200 p-8">
-            <h2
-              className="text-xl mb-3 text-gray-900"
-              style={{ fontFamily: "'Fraunces', serif", fontWeight: 600 }}
-            >
-              For recruiters
-            </h2>
-            <ul className="text-sm text-gray-600 space-y-2 mb-6">
-              <li>Post a role and list the skills that actually matter</li>
-              <li>See applicants ranked by real skill overlap</li>
-              <li>Move candidates through pending, shortlisted, and hired</li>
-            </ul>
+          <div className="rounded-2xl bg-[#193b32] p-8 text-white">
+            <span className="text-sm font-bold text-[#b9e3c5]">
+              FOR RECRUITERS
+            </span>
+            <h3 className="mt-5 text-2xl font-bold">Meet great talent.</h3>
+            <p className="mt-3 leading-7 text-[#c8dcd0]">
+              Post opportunities, review applicants, and manage your
+              hiring process.
+            </p>
             <Link
               to="/register"
-              className="text-sm font-medium text-indigo-600 hover:underline"
+              className="mt-7 inline-block font-semibold text-[#b9e3c5] hover:underline"
             >
-              Create a recruiter account →
+              Join as a recruiter →
             </Link>
           </div>
         </div>
       </section>
-
-      {/* HOW MATCHING WORKS — real sequence, numbering earned */}
-      <section className="bg-white py-16 border-t border-gray-100">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2
-            className="text-2xl text-gray-900 mb-10 text-center"
-            style={{ fontFamily: "'Fraunces', serif", fontWeight: 600 }}
-          >
-            How matching works
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                step: "01",
-                title: "Upload your CV",
-                body: "One PDF. GradLink reads it once and keeps it on file.",
-              },
-              {
-                step: "02",
-                title: "We read your skills",
-                body: "Skills are normalized, so \"ReactJS\" and \"React.js\" count the same.",
-              },
-              {
-                step: "03",
-                title: "See your match",
-                body: "Every job shows a match percentage based on required skills.",
-              },
-            ].map((item) => (
-              <div key={item.step}>
-                <p
-                  className="text-[#E8B84B] text-sm mb-2"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                >
-                  {item.step}
-                </p>
-                <h3 className="font-semibold text-gray-900 mb-1">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="bg-[#12203D] text-[#B7C2D6] py-8">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-3">
-          <p className="text-sm">GradLink — matched by skill, not by luck.</p>
-          <div className="flex gap-5 text-sm">
-            <Link to="/jobs" className="hover:text-white">Browse Jobs</Link>
-            <Link to="/register" className="hover:text-white">Get Started</Link>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </main>
   );
 };
 

@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
 const Profile = () => {
-  const { user: authUser } = useAuth();
+  const { user } = useAuth();
+  const [email, setEmail] = useState("");
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -18,127 +19,182 @@ const Profile = () => {
   useEffect(() => {
     api
       .get("/auth/me")
-      .then((res) => {
-        const u = res.data.user;
+      .then((response) => {
+        const profile = response.data.user;
+        setEmail(profile.email || "");
         setForm({
-          name: u.name || "",
-          phone: u.phone || "",
-          location: u.location || "",
-          skills: (u.skills || []).join(", "),
+          name: profile.name || "",
+          phone: profile.phone || "",
+          location: profile.location || "",
+          skills: (profile.skills || []).join(", "),
         });
       })
-      .catch(() => setError("Failed to load profile"))
+      .catch(() => setError("Could not load your profile."))
       .finally(() => setLoading(false));
   }, []);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (event) => {
+    setForm((current) => ({
+      ...current,
+      [event.target.name]: event.target.value,
+    }));
+    setSuccess(false);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError("");
     setSuccess(false);
     setSaving(true);
+
     try {
       await api.put("/users/profile", {
         name: form.name,
         phone: form.phone,
         location: form.location,
-        skills: form.skills.split(",").map((s) => s.trim()).filter(Boolean),
+        skills: form.skills
+          .split(",")
+          .map((skill) => skill.trim())
+          .filter(Boolean),
       });
       setSuccess(true);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to update profile");
+      setError(err.response?.data?.message || "Could not save your profile.");
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Loading...</div>;
+  const inputClass =
+    "w-full rounded-lg border border-[#dce7dc] bg-[#fafbf8] px-4 py-3 outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20";
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Your Profile</h1>
+    <main className="min-h-screen bg-[#f7f8f4] px-6 py-10 md:px-10">
+      <div className="mx-auto max-w-3xl">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+          Your account
+        </p>
+        <h1 className="mt-2 text-3xl font-bold text-[#172b2a]">
+          My profile
+        </h1>
+        <p className="mt-2 text-sm text-gray-600">
+          Keep your details up to date.
+        </p>
 
-      {error && (
-        <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-3">
-          {error}
-        </div>
-      )}
-      {success && (
-        <div className="mb-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md p-3">
-          Profile updated.
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-          <input
-            name="name"
-            required
-            value={form.name}
-            onChange={handleChange}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-          <input
-            value={authUser?.email || ""}
-            disabled
-            className="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-gray-500"
-          />
-          <p className="text-xs text-gray-400 mt-1">Email cannot be changed</p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-            <input
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-            <input
-              name="location"
-              value={form.location}
-              onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-        </div>
-
-        {authUser?.role === "jobseeker" && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Skills <span className="text-gray-400 font-normal">(comma-separated)</span>
-            </label>
-            <input
-              name="skills"
-              placeholder="JavaScript, React, MongoDB"
-              value={form.skills}
-              onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+        {error && (
+          <p
+            role="alert"
+            className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+          >
+            {error}
+          </p>
         )}
 
-        <button
-          type="submit"
-          disabled={saving}
-          className="w-full bg-indigo-600 text-white rounded-md py-2 font-medium hover:bg-indigo-700 disabled:opacity-50"
-        >
-          {saving ? "Saving..." : "Save Changes"}
-        </button>
-      </form>
-    </div>
+        {success && (
+          <p
+            role="status"
+            className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700"
+          >
+            Profile updated successfully.
+          </p>
+        )}
+
+        {loading ? (
+          <div className="mt-8 rounded-xl bg-white p-8">
+            Loading your profile...
+          </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="mt-8 space-y-5 rounded-xl border border-[#dce7dc] bg-white p-6 md:p-8"
+          >
+            <div>
+              <label htmlFor="profile-name" className="mb-2 block text-sm font-semibold">
+                Full name
+              </label>
+              <input
+                id="profile-name"
+                name="name"
+                required
+                value={form.name}
+                onChange={handleChange}
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="profile-email" className="mb-2 block text-sm font-semibold">
+                Email address
+              </label>
+              <input
+                id="profile-email"
+                value={email}
+                disabled
+                className={`${inputClass} text-gray-500`}
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Email cannot be changed here.
+              </p>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="profile-phone" className="mb-2 block text-sm font-semibold">
+                  Phone
+                </label>
+                <input
+                  id="profile-phone"
+                  name="phone"
+                  value={form.phone}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="profile-location" className="mb-2 block text-sm font-semibold">
+                  Location
+                </label>
+                <input
+                  id="profile-location"
+                  name="location"
+                  value={form.location}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+              </div>
+            </div>
+
+            {user?.role === "jobseeker" && (
+              <div>
+                <label htmlFor="profile-skills" className="mb-2 block text-sm font-semibold">
+                  Skills
+                </label>
+                <input
+                  id="profile-skills"
+                  name="skills"
+                  value={form.skills}
+                  onChange={handleChange}
+                  placeholder="JavaScript, React, MongoDB"
+                  className={inputClass}
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Separate skills with commas.
+                </p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={saving}
+              className="rounded-lg bg-[#172b2a] px-6 py-3 text-sm font-semibold text-white hover:bg-[#347d61] disabled:opacity-60"
+            >
+              {saving ? "Saving..." : "Save changes"}
+            </button>
+          </form>
+        )}
+      </div>
+    </main>
   );
 };
 

@@ -177,7 +177,7 @@ const ApplicationHistory = () => {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600" />
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#b6d5be] border-t-[#245d4b]" />
 
           <p className="mt-3 text-sm text-gray-500">
             Loading your applications...
@@ -188,7 +188,7 @@ const ApplicationHistory = () => {
   }
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-8">
+    <main className="mx-auto min-h-screen max-w-6xl px-4 py-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
@@ -204,7 +204,7 @@ const ApplicationHistory = () => {
 
         <Link
           to="/jobs"
-          className="inline-flex justify-center rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
+          className="inline-flex justify-center rounded-lg bg-[#245d4b] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1a4e3c]"
         >
           Browse more jobs
         </Link>
@@ -224,8 +224,8 @@ const ApplicationHistory = () => {
           }
           className={`rounded-xl border p-4 text-left transition ${
             statusFilter === "all"
-              ? "border-indigo-500 bg-indigo-50"
-              : "border-gray-200 bg-white hover:border-indigo-300"
+              ? "border-[#347d61] bg-[#e6f3ea]"
+              : "border-gray-200 bg-white hover:border-[#8fbea0]"
           }`}
         >
           <p className="text-sm text-gray-500">
@@ -336,7 +336,7 @@ const ApplicationHistory = () => {
 
           <Link
             to="/jobs"
-            className="mt-5 inline-flex rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
+            className="mt-5 inline-flex rounded-lg bg-[#245d4b] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1a4e3c]"
           >
             Find jobs
           </Link>
@@ -359,7 +359,7 @@ const ApplicationHistory = () => {
             onClick={() =>
               setStatusFilter("all")
             }
-            className="mt-5 rounded-lg border border-indigo-200 px-5 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-50"
+            className="mt-5 rounded-lg border border-[#b6d5be] px-5 py-2 text-sm font-semibold text-[#276348] hover:bg-[#e6f3ea]"
           >
             Show all applications
           </button>
@@ -533,7 +533,7 @@ const ApplicationHistory = () => {
                       {job?._id && (
                         <Link
                           to={`/jobs/${job._id}`}
-                          className="rounded-lg bg-indigo-600 px-4 py-2 text-center text-sm font-semibold text-white hover:bg-indigo-700"
+                          className="rounded-lg bg-[#245d4b] px-4 py-2 text-center text-sm font-semibold text-white hover:bg-[#1a4e3c]"
                         >
                           View job
                         </Link>
@@ -542,7 +542,7 @@ const ApplicationHistory = () => {
                       {job?._id && (
                         <Link
                           to={`/cv-analysis?jobId=${job._id}`}
-                          className="rounded-lg border border-indigo-200 px-4 py-2 text-center text-sm font-semibold text-indigo-700 hover:bg-indigo-50"
+                          className="rounded-lg border border-[#b6d5be] px-4 py-2 text-center text-sm font-semibold text-[#276348] hover:bg-[#e6f3ea]"
                         >
                           View CV match
                         </Link>

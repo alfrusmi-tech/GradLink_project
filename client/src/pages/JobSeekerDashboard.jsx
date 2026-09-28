@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 
 const statusColors = {
-  pending: "bg-yellow-50 text-yellow-700",
+  pending: "bg-amber-50 text-amber-700",
   shortlisted: "bg-blue-50 text-blue-700",
   accepted: "bg-green-50 text-green-700",
   rejected: "bg-red-50 text-red-700",
@@ -17,95 +17,156 @@ const JobSeekerDashboard = () => {
   useEffect(() => {
     api
       .get("/applications/me")
-      .then((res) => {
-        const data = res.data?.applications;
-        setApplications(Array.isArray(data) ? data : []);
+      .then((response) => {
+        const items = response.data?.applications;
+        setApplications(Array.isArray(items) ? items : []);
       })
-      .catch(() => setError("Failed to load applications"))
+      .catch(() => setError("Could not load your applications."))
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Loading...</div>;
-
   const recent = applications.slice(0, 4);
-  const counts = {
-    pending: applications.filter((a) => a.status === "pending").length,
-    shortlisted: applications.filter((a) => a.status === "shortlisted").length,
-    accepted: applications.filter((a) => a.status === "accepted").length,
-  };
+  const shortlisted = applications.filter(
+    (item) => item.status === "shortlisted"
+  ).length;
+  const accepted = applications.filter(
+    (item) => item.status === "accepted"
+  ).length;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <div className="flex gap-2">
-          <Link
-            to="/upload-cv"
-            className="border border-gray-300 text-gray-700 rounded-md px-4 py-2 text-sm font-medium hover:bg-gray-50"
-          >
-            Manage CV
-          </Link>
-          <Link
-            to="/jobs"
-            className="bg-indigo-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-indigo-700"
-          >
-            Browse Jobs
-          </Link>
-        </div>
-      </div>
+    <main className="min-h-screen bg-[#f7f8f4] px-6 py-10 md:px-10">
+      <div className="mx-auto max-w-6xl">
+        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+              Your workspace
+            </p>
+            <h1 className="mt-2 text-3xl font-bold text-[#172b2a] md:text-4xl">
+              Dashboard
+            </h1>
+            <p className="mt-2 text-sm text-gray-600">
+              Keep track of your opportunities and next steps.
+            </p>
+          </div>
 
-      {error && <p className="text-red-600 mb-4">{error}</p>}
-
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-xl border border-gray-200 p-5 text-center">
-          <p className="text-2xl font-bold text-gray-900">{applications.length}</p>
-          <p className="text-xs text-gray-500 mt-1">Total Applications</p>
-        </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5 text-center">
-          <p className="text-2xl font-bold text-blue-700">{counts.shortlisted}</p>
-          <p className="text-xs text-gray-500 mt-1">Shortlisted</p>
-        </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5 text-center">
-          <p className="text-2xl font-bold text-green-700">{counts.accepted}</p>
-          <p className="text-xs text-gray-500 mt-1">Accepted</p>
-        </div>
-      </div>
-
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold text-gray-900">Recent Applications</h2>
-        <Link to="/applications/history" className="text-sm font-medium text-indigo-600 hover:underline">
-          See full history →
-        </Link>
-      </div>
-
-      {recent.length === 0 ? (
-        <p className="text-gray-500 text-center py-12">
-          You haven't applied to any jobs yet.
-        </p>
-      ) : (
-        <div className="space-y-3">
-          {recent.map((app) => (
+          <div className="flex flex-wrap gap-3">
             <Link
-              key={app._id}
-              to={`/jobs/${app.job?._id}`}
-              className="block bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition"
+              to="/upload-cv"
+              className="rounded-lg border border-[#cddbd0] bg-white px-4 py-2.5 text-sm font-semibold text-[#172b2a] hover:bg-[#edf3e9]"
             >
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="font-medium text-gray-900">{app.job?.title}</p>
-                  <p className="text-xs text-gray-500">{app.job?.company?.name}</p>
-                </div>
-                <span
-                  className={`text-xs font-medium px-2 py-1 rounded-full capitalize ${statusColors[app.status]}`}
-                >
-                  {app.status}
-                </span>
-              </div>
+              Manage CV
             </Link>
-          ))}
+            <Link
+              to="/jobs"
+              className="rounded-lg bg-[#172b2a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#347d61]"
+            >
+              Browse jobs →
+            </Link>
+          </div>
         </div>
-      )}
-    </div>
+
+        {error && (
+          <p
+            role="alert"
+            className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+          >
+            {error}
+          </p>
+        )}
+
+        {loading ? (
+          <div className="mt-8 rounded-xl bg-white p-8 text-gray-600">
+            Loading your dashboard...
+          </div>
+        ) : (
+          <>
+            <div className="mt-9 grid gap-4 sm:grid-cols-3">
+              {[
+                { label: "Total applications", value: applications.length },
+                { label: "Shortlisted", value: shortlisted },
+                { label: "Accepted", value: accepted },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-xl border border-[#dce7dc] bg-white p-6"
+                >
+                  <p className="text-sm text-gray-600">{item.label}</p>
+                  <p className="mt-4 text-4xl font-bold text-[#172b2a]">
+                    {item.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+                  Your activity
+                </p>
+                <h2 className="mt-2 text-2xl font-bold text-[#172b2a]">
+                  Recent applications
+                </h2>
+              </div>
+              <Link
+                to="/applications/history"
+                className="text-sm font-semibold text-[#276348] hover:underline"
+              >
+                View all applications →
+              </Link>
+            </div>
+
+            {recent.length === 0 ? (
+              <div className="mt-5 rounded-xl border border-[#dce7dc] bg-white p-10 text-center">
+                <h3 className="text-lg font-bold text-[#172b2a]">
+                  No applications yet
+                </h3>
+                <p className="mt-2 text-sm text-gray-600">
+                  Browse jobs to find an opportunity you would like to apply for.
+                </p>
+                <Link
+                  to="/jobs"
+                  className="mt-5 inline-block font-semibold text-[#276348] hover:underline"
+                >
+                  Explore jobs →
+                </Link>
+              </div>
+            ) : (
+              <div className="mt-5 space-y-3">
+                {recent.map((application) => (
+                  <Link
+                    key={application._id}
+                    to={
+                      application.job?._id
+                        ? `/jobs/${application.job._id}`
+                        : "/applications/history"
+                    }
+                    className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[#dce7dc] bg-white p-5 transition hover:border-[#83b99a] hover:shadow-md"
+                  >
+                    <div>
+                      <h3 className="font-bold text-[#172b2a]">
+                        {application.job?.title || "Job unavailable"}
+                      </h3>
+                      <p className="mt-1 text-sm text-gray-600">
+                        {application.job?.company?.name || "Company"}
+                      </p>
+                    </div>
+
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${
+                        statusColors[application.status] ||
+                        "bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      {application.status || "Unknown"}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </main>
   );
 };
 

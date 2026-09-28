@@ -228,10 +228,10 @@ const JobApplicants = () => {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8">
+    <main className="mx-auto min-h-screen max-w-5xl px-4 py-8">
       <Link
         to="/recruiter/jobs"
-        className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+        className="text-sm font-medium text-[#276348] hover:text-[#276348]"
       >
         ← Back to My Jobs
       </Link>
@@ -253,12 +253,12 @@ const JobApplicants = () => {
           )}
         </div>
 
-        <div className="w-fit rounded-xl bg-indigo-50 px-5 py-3">
-          <p className="text-xs text-indigo-600">
+        <div className="w-fit rounded-xl bg-[#e6f3ea] px-5 py-3">
+          <p className="text-xs text-[#276348]">
             Total applicants
           </p>
 
-          <p className="text-2xl font-bold text-indigo-800">
+          <p className="text-2xl font-bold text-[#1d4e3d]">
             {applications.length}
           </p>
         </div>
@@ -396,7 +396,7 @@ const JobApplicants = () => {
                               key={
                                 skill
                               }
-                              className="rounded-full bg-indigo-50 px-3 py-1 text-xs text-indigo-700"
+                              className="rounded-full bg-[#e6f3ea] px-3 py-1 text-xs text-[#276348]"
                             >
                               {
                                 skill
@@ -420,7 +420,7 @@ const JobApplicants = () => {
                         downloadingId ===
                         application._id
                       }
-                      className="rounded-lg border border-indigo-200 px-4 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="rounded-lg border border-[#b6d5be] px-4 py-2 text-sm font-semibold text-[#276348] hover:bg-[#e6f3ea] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {downloadingId ===
                       application._id
