@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -17,24 +16,24 @@ const Navbar = () => {
   };
 
   const linkClass = ({ isActive }) =>
-    `text-sm font-semibold transition hover:text-[#347d61] ${
+    `gradlink-nav-link text-sm font-semibold transition hover:text-[#347d61] ${
       isActive ? "text-[#347d61]" : "text-[#52645b]"
     }`;
 
   return (
-    <header className="relative z-20 border-b border-[#e2e9e0] bg-white">
+    <header className="relative z-20 border-b border-[#e2e9e0] bg-white gradlink-header">
       <div className="mx-auto flex min-h-[72px] max-w-7xl items-center px-6 md:px-10">
         <Link
           to="/"
           onClick={closeMenu}
-          className="text-2xl font-extrabold tracking-tight text-[#172b2a]"
+          className="gradlink-logo text-2xl font-extrabold tracking-tight text-[#172b2a]"
         >
           GradLink<span className="text-[#347d61]">.</span>
         </Link>
 
         {/* Desktop navigation */}
         <nav
-          className="ml-auto hidden items-center gap-7 md:flex"
+          className="gradlink-desktop-navigation ml-auto hidden items-center gap-7 md:flex"
           aria-label="Main navigation"
         >
           <NavLink to="/jobs" className={linkClass}>
@@ -103,7 +102,7 @@ const Navbar = () => {
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
-          className="ml-auto rounded-lg border border-[#dce7dc] px-3 py-2 text-xl md:hidden"
+          className="gradlink-menu-button ml-auto rounded-lg border border-[#dce7dc] px-3 py-2 text-xl md:hidden"
         >
           {menuOpen ? "✕" : "☰"}
         </button>
