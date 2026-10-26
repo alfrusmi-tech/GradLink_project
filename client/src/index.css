@@ -16,7 +16,7 @@ body {
 
 #root:has(.gradlink-landing) > div {
   position: relative;
-  background: #fbf8f5;
+  background: #fff;
 }
 
 #root:has(.gradlink-landing) > div > header.gradlink-header {
@@ -46,7 +46,7 @@ body {
 }
 
 #root:has(.gradlink-landing) .gradlink-logo span {
-  color: #f28c72;
+  color: #fff;
 }
 
 #root:has(.gradlink-landing) .gradlink-header nav[aria-label="Main navigation"] {
@@ -59,11 +59,17 @@ body {
   color: #f3d9d2;
 }
 
+#root:has(.gradlink-landing) .gradlink-header .gradlink-nav-link:hover {
+  background: rgb(255 255 255 / 12%);
+  color: #fff;
+}
+
 #root:has(.gradlink-landing) .gradlink-header nav[aria-label="Main navigation"] a[href="/login"] {
   padding: 9px 18px;
   border: 1px solid rgb(234 223 232 / 58%);
   border-radius: 999px;
   color: #fff;
+  transition: background-color 160ms ease, border-color 160ms ease;
 }
 
 #root:has(.gradlink-landing) .gradlink-header nav[aria-label="Main navigation"] a[href="/login"]:hover {

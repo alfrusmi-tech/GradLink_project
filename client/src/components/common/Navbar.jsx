@@ -16,7 +16,7 @@ const Navbar = () => {
   };
 
   const linkClass = ({ isActive }) =>
-    `gradlink-nav-link text-sm font-semibold transition hover:text-[#593a67] ${
+    `gradlink-nav-link rounded-lg px-2 py-2 text-sm font-semibold transition-colors duration-200 hover:bg-[#f8e5df] hover:text-[#593a67] ${
       isActive ? "text-[#593a67]" : "text-[#6f6472]"
     }`;
 
@@ -83,7 +83,7 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="rounded-lg border border-[#eadfe8] px-4 py-2 text-sm font-semibold text-[#35253d] hover:bg-[#f4e9f2]"
+                className="rounded-lg border border-[#eadfe8] px-4 py-2 text-sm font-semibold text-[#35253d] transition-colors duration-200 hover:border-[#f28c72] hover:bg-[#f8e5df]"
               >
                 Log out
               </button>
@@ -102,7 +102,7 @@ const Navbar = () => {
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
-          className="gradlink-menu-button ml-auto rounded-lg border border-[#eadfe8] px-3 py-2 text-xl md:hidden"
+          className="gradlink-menu-button ml-auto rounded-lg border border-[#eadfe8] px-3 py-2 text-xl transition-colors duration-200 hover:border-[#f28c72] hover:bg-[#f8e5df] md:hidden"
         >
           {menuOpen ? "✕" : "☰"}
         </button>
@@ -190,7 +190,7 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="self-start rounded-lg bg-[#35253d] px-5 py-2.5 text-sm font-semibold text-white"
+                className="self-start rounded-lg bg-[#35253d] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#593a67]"
               >
                 Log out
               </button>
