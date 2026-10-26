@@ -39,16 +39,16 @@ const Jobs = () => {
   });
 
   return (
-    <main className="min-h-screen bg-[#f7f8f4]">
-      <section className="bg-[#193b32] px-6 py-16 text-white md:px-10">
+    <main className="min-h-screen bg-[#fbf8f5]">
+      <section className="bg-[#593a67] px-6 py-16 text-white md:px-10">
         <div className="mx-auto max-w-7xl">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#b9e3c5]">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f8c9bd]">
             Opportunities
           </p>
           <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
             Find your next role.
           </h1>
-          <p className="mt-4 max-w-xl leading-7 text-[#c8dcd0]">
+          <p className="mt-4 max-w-xl leading-7 text-[#f3d9d2]">
             Explore jobs and discover opportunities that match your interests
             and skills.
           </p>
@@ -58,7 +58,7 @@ const Jobs = () => {
       <div className="mx-auto max-w-7xl px-6 py-10 md:px-10">
         <label
           htmlFor="job-search"
-          className="mb-2 block text-sm font-semibold text-[#172b2a]"
+          className="mb-2 block text-sm font-semibold text-[#35253d]"
         >
           Search jobs
         </label>
@@ -68,11 +68,11 @@ const Jobs = () => {
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder="Search by title, company, location, or skill"
-          className="w-full rounded-xl border border-[#dce7dc] bg-white px-5 py-4 text-sm outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20"
+          className="w-full rounded-xl border border-[#eadfe8] bg-white px-5 py-4 text-sm outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20"
         />
 
         <div className="mb-6 mt-10 flex items-end justify-between gap-4">
-          <h2 className="text-2xl font-bold text-[#172b2a]">Explore jobs</h2>
+          <h2 className="text-2xl font-bold text-[#35253d]">Explore jobs</h2>
           {!loading && !error && (
             <span className="text-sm text-gray-500">
               {filteredJobs.length} roles found
@@ -93,7 +93,7 @@ const Jobs = () => {
         )}
 
         {!loading && !error && filteredJobs.length === 0 && (
-          <div className="rounded-xl border border-[#dce7dc] bg-white p-10 text-center">
+          <div className="rounded-xl border border-[#eadfe8] bg-white p-10 text-center">
             <h3 className="text-lg font-bold">No jobs found</h3>
             <p className="mt-2 text-gray-600">
               {search
@@ -109,11 +109,11 @@ const Jobs = () => {
               <Link
                 key={job._id}
                 to={`/jobs/${job._id}`}
-                className="block rounded-xl border border-[#dce7dc] bg-white p-6 transition hover:-translate-y-1 hover:border-[#83b99a] hover:shadow-lg"
+                className="block rounded-xl border border-[#eadfe8] bg-white p-6 transition hover:-translate-y-1 hover:border-[#f28c72] hover:shadow-lg"
               >
                 <div className="flex justify-between gap-4">
                   <div>
-                    <h3 className="text-lg font-bold text-[#172b2a]">
+                    <h3 className="text-lg font-bold text-[#35253d]">
                       {job.title}
                     </h3>
                     <p className="mt-1 text-sm text-gray-600">
@@ -121,19 +121,19 @@ const Jobs = () => {
                       {job.location || "Location not specified"}
                     </p>
                   </div>
-                  <span className="text-xl text-[#347d61]">↗</span>
+                  <span className="text-xl text-[#593a67]">↗</span>
                 </div>
 
                 <div className="mt-5 flex flex-wrap gap-2">
                   {job.jobType && (
-                    <span className="rounded-md bg-[#e6f3ea] px-3 py-1.5 text-xs font-medium capitalize text-[#276348]">
+                    <span className="rounded-md bg-[#f4e9f2] px-3 py-1.5 text-xs font-medium capitalize text-[#473052]">
                       {job.jobType}
                     </span>
                   )}
                   {job.requiredSkills?.slice(0, 4).map((skill) => (
                     <span
                       key={skill}
-                      className="rounded-md bg-[#f2f5f0] px-3 py-1.5 text-xs text-[#52645b]"
+                      className="rounded-md bg-[#fbf8f5] px-3 py-1.5 text-xs text-[#6f6472]"
                     >
                       {skill}
                     </span>

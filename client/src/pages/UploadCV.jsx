@@ -92,12 +92,12 @@ const UploadCV = () => {
     : null;
 
   return (
-    <main className="min-h-screen bg-[#f7f8f4] px-6 py-10 md:px-10">
+    <main className="min-h-screen bg-[#fbf8f5] px-6 py-10 md:px-10">
       <div className="mx-auto max-w-4xl">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#593a67]">
           Your career tools
         </p>
-        <h1 className="mt-2 text-3xl font-bold text-[#172b2a]">
+        <h1 className="mt-2 text-3xl font-bold text-[#35253d]">
           Your CV
         </h1>
         <p className="mt-2 max-w-2xl leading-7 text-gray-600">
@@ -124,9 +124,9 @@ const UploadCV = () => {
           <>
             <form
               onSubmit={handleUpload}
-              className="mt-8 rounded-xl border border-[#dce7dc] bg-white p-6 md:p-8"
+              className="mt-8 rounded-xl border border-[#eadfe8] bg-white p-6 md:p-8"
             >
-              <h2 className="text-xl font-bold text-[#172b2a]">
+              <h2 className="text-xl font-bold text-[#35253d]">
                 {cv ? "Replace your CV" : "Upload a CV"}
               </h2>
               <p className="mt-2 text-sm text-gray-600">
@@ -135,10 +135,10 @@ const UploadCV = () => {
 
               <label
                 htmlFor="cv-file"
-                className="mt-6 block cursor-pointer rounded-xl border-2 border-dashed border-[#a9c9af] bg-[#f6faf5] p-8 text-center hover:bg-[#eaf5e9]"
+                className="mt-6 block cursor-pointer rounded-xl border-2 border-dashed border-[#a9c9af] bg-[#fbf8f5] p-8 text-center hover:bg-[#f8e5df]"
               >
-                <span className="block text-3xl text-[#347d61]">↑</span>
-                <span className="mt-2 block font-semibold text-[#276348]">
+                <span className="block text-3xl text-[#593a67]">↑</span>
+                <span className="mt-2 block font-semibold text-[#473052]">
                   Select your PDF CV
                 </span>
                 <span className="mt-1 block text-sm text-gray-600">
@@ -157,7 +157,7 @@ const UploadCV = () => {
               <button
                 type="submit"
                 disabled={!file || uploading}
-                className="mt-6 rounded-lg bg-[#172b2a] px-6 py-3 text-sm font-semibold text-white hover:bg-[#347d61] disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-6 rounded-lg bg-[#35253d] px-6 py-3 text-sm font-semibold text-white hover:bg-[#593a67] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {uploading
                   ? "Uploading and reading CV..."
@@ -168,13 +168,13 @@ const UploadCV = () => {
             </form>
 
             {cv ? (
-              <section className="mt-6 rounded-xl border border-[#dce7dc] bg-white p-6 md:p-8">
+              <section className="mt-6 rounded-xl border border-[#eadfe8] bg-white p-6 md:p-8">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-[#347d61]">
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#593a67]">
                       Current CV
                     </p>
-                    <h2 className="mt-2 text-xl font-bold text-[#172b2a]">
+                    <h2 className="mt-2 text-xl font-bold text-[#35253d]">
                       {cv.fileName || "Uploaded CV"}
                     </h2>
                   </div>
@@ -184,7 +184,7 @@ const UploadCV = () => {
                       href={cvUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-lg border border-[#a9c9af] px-4 py-2 text-sm font-semibold text-[#276348] hover:bg-[#eaf5e9]"
+                      className="rounded-lg border border-[#a9c9af] px-4 py-2 text-sm font-semibold text-[#473052] hover:bg-[#f8e5df]"
                     >
                       View PDF ↗
                     </a>
@@ -192,7 +192,7 @@ const UploadCV = () => {
                 </div>
 
                 <div className="mt-8">
-                  <h3 className="font-bold text-[#172b2a]">
+                  <h3 className="font-bold text-[#35253d]">
                     Extracted skills
                   </h3>
 
@@ -201,7 +201,7 @@ const UploadCV = () => {
                       {cv.extractedSkills.map((skill) => (
                         <span
                           key={skill}
-                          className="rounded-md bg-[#e6f3ea] px-3 py-2 text-xs font-medium text-[#276348]"
+                          className="rounded-md bg-[#f4e9f2] px-3 py-2 text-xs font-medium text-[#473052]"
                         >
                           {skill}
                         </span>
@@ -217,14 +217,14 @@ const UploadCV = () => {
 
                 <Link
                   to="/cv-analysis"
-                  className="mt-8 inline-block rounded-lg bg-[#172b2a] px-5 py-3 text-sm font-semibold text-white hover:bg-[#347d61]"
+                  className="mt-8 inline-block rounded-lg bg-[#35253d] px-5 py-3 text-sm font-semibold text-white hover:bg-[#593a67]"
                 >
                   Analyze against a job →
                 </Link>
               </section>
             ) : (
-              <div className="mt-6 rounded-xl border border-[#dce7dc] bg-white p-8 text-center">
-                <h2 className="font-bold text-[#172b2a]">
+              <div className="mt-6 rounded-xl border border-[#eadfe8] bg-white p-8 text-center">
+                <h2 className="font-bold text-[#35253d]">
                   No CV uploaded yet
                 </h2>
                 <p className="mt-2 text-sm text-gray-600">

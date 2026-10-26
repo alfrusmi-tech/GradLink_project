@@ -291,7 +291,7 @@ const JobDetails = () => {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#b6d5be] border-t-[#245d4b]" />
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#f8d9d0] border-t-[#755780]" />
 
           <p className="mt-3 text-sm text-gray-500">
             Loading job details...
@@ -329,7 +329,7 @@ const JobDetails = () => {
     <main className="mx-auto min-h-screen max-w-4xl px-4 py-8">
       <Link
         to="/jobs"
-        className="mb-5 inline-flex text-sm font-medium text-[#276348] hover:text-[#276348]"
+        className="mb-5 inline-flex text-sm font-medium text-[#473052] hover:text-[#473052]"
       >
         ← Back to jobs
       </Link>
@@ -349,7 +349,7 @@ const JobDetails = () => {
             </p>
           </div>
 
-          <span className="w-fit rounded-full bg-[#e6f3ea] px-3 py-1 text-xs font-semibold capitalize text-[#276348]">
+          <span className="w-fit rounded-full bg-[#f4e9f2] px-3 py-1 text-xs font-semibold capitalize text-[#473052]">
             {job.jobType}
           </span>
         </div>
@@ -468,7 +468,7 @@ const JobDetails = () => {
                 (skill) => (
                   <span
                     key={skill}
-                    className="rounded-full bg-[#e6f3ea] px-3 py-1 text-sm font-medium text-[#276348]"
+                    className="rounded-full bg-[#f4e9f2] px-3 py-1 text-sm font-medium text-[#473052]"
                   >
                     {skill}
                   </span>
@@ -521,8 +521,8 @@ const JobDetails = () => {
             </h2>
 
             {!user && (
-              <div className="mt-4 rounded-xl border border-[#b6d5be] bg-[#e6f3ea] p-4">
-                <p className="text-sm text-[#1d4e3d]">
+              <div className="mt-4 rounded-xl border border-[#f8d9d0] bg-[#f4e9f2] p-4">
+                <p className="text-sm text-[#593a67]">
                   You must log in as a
                   job seeker before
                   applying.
@@ -540,7 +540,7 @@ const JobDetails = () => {
                       }
                     )
                   }
-                  className="mt-3 rounded-lg bg-[#245d4b] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1a4e3c]"
+                  className="mt-3 rounded-lg bg-[#755780] px-4 py-2 text-sm font-semibold text-white hover:bg-[#473052]"
                 >
                   Log in to apply
                 </button>
@@ -629,7 +629,7 @@ const JobDetails = () => {
                       }
                       rows={6}
                       maxLength={2000}
-                      className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-700 outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#b6d5be]"
+                      className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-700 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#f8d9d0]"
                       placeholder="Briefly explain why you are suitable for this position..."
                     />
 
@@ -659,7 +659,7 @@ const JobDetails = () => {
                           applying ||
                           !canApply
                         }
-                        className="rounded-lg bg-[#245d4b] px-6 py-3 font-semibold text-white hover:bg-[#1a4e3c] disabled:cursor-not-allowed disabled:opacity-50"
+                        className="rounded-lg bg-[#755780] px-6 py-3 font-semibold text-white hover:bg-[#473052] disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         {applying
                           ? "Submitting application..."
@@ -668,7 +668,7 @@ const JobDetails = () => {
 
                       <Link
                         to={`/cv-analysis?jobId=${job._id}`}
-                        className="rounded-lg border border-[#b6d5be] px-6 py-3 text-center font-semibold text-[#276348] hover:bg-[#e6f3ea]"
+                        className="rounded-lg border border-[#f8d9d0] px-6 py-3 text-center font-semibold text-[#473052] hover:bg-[#f4e9f2]"
                       >
                         Analyze CV first
                       </Link>

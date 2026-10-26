@@ -20,9 +20,9 @@ const initialForm = {
 };
 
 const inputClass =
-  "w-full rounded-lg border border-[#dce7dc] bg-[#fafbf8] px-4 py-3 text-sm outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20";
+  "w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 text-sm outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20";
 
-const labelClass = "mb-2 block text-sm font-semibold text-[#172b2a]";
+const labelClass = "mb-2 block text-sm font-semibold text-[#35253d]";
 
 const toList = (value) =>
   value
@@ -149,7 +149,7 @@ const EditJob = () => {
     return (
       <main
         role="status"
-        className="min-h-screen bg-[#f7f8f4] p-10 text-center text-gray-600"
+        className="min-h-screen bg-[#fbf8f5] p-10 text-center text-gray-600"
       >
         Loading job...
       </main>
@@ -158,13 +158,13 @@ const EditJob = () => {
 
   if (!loaded) {
     return (
-      <main className="min-h-screen bg-[#f7f8f4] px-6 py-16 text-center">
+      <main className="min-h-screen bg-[#fbf8f5] px-6 py-16 text-center">
         <p role="alert" className="text-red-700">
           {error}
         </p>
         <Link
           to="/recruiter/dashboard"
-          className="mt-5 inline-block font-semibold text-[#276348] hover:underline"
+          className="mt-5 inline-block font-semibold text-[#473052] hover:underline"
         >
           ← Back to dashboard
         </Link>
@@ -173,19 +173,19 @@ const EditJob = () => {
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f8f4] px-6 py-10 md:px-10">
+    <main className="min-h-screen bg-[#fbf8f5] px-6 py-10 md:px-10">
       <div className="mx-auto max-w-4xl">
         <Link
           to="/recruiter/dashboard"
-          className="text-sm font-semibold text-[#276348] hover:underline"
+          className="text-sm font-semibold text-[#473052] hover:underline"
         >
           ← Back to dashboard
         </Link>
 
-        <p className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+        <p className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-[#593a67]">
           Recruiter workspace
         </p>
-        <h1 className="mt-2 text-3xl font-bold text-[#172b2a]">
+        <h1 className="mt-2 text-3xl font-bold text-[#35253d]">
           Edit job
         </h1>
         <p className="mt-2 text-sm text-gray-600">
@@ -203,11 +203,11 @@ const EditJob = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="mt-8 space-y-7 rounded-xl border border-[#dce7dc] bg-white p-6 md:p-8"
+          className="mt-8 space-y-7 rounded-xl border border-[#eadfe8] bg-white p-6 md:p-8"
         >
           {/* Basic details */}
           <section className="space-y-5">
-            <h2 className="border-b border-[#e5ece4] pb-3 text-lg font-bold text-[#172b2a]">
+            <h2 className="border-b border-[#eadfe8] pb-3 text-lg font-bold text-[#35253d]">
               Job details
             </h2>
 
@@ -260,7 +260,7 @@ const EditJob = () => {
 
           {/* Skills */}
           <section className="space-y-5">
-            <h2 className="border-b border-[#e5ece4] pb-3 text-lg font-bold text-[#172b2a]">
+            <h2 className="border-b border-[#eadfe8] pb-3 text-lg font-bold text-[#35253d]">
               Skills and requirements
             </h2>
 
@@ -313,7 +313,7 @@ const EditJob = () => {
 
           {/* Role options */}
           <section className="space-y-5">
-            <h2 className="border-b border-[#e5ece4] pb-3 text-lg font-bold text-[#172b2a]">
+            <h2 className="border-b border-[#eadfe8] pb-3 text-lg font-bold text-[#35253d]">
               Role options
             </h2>
 
@@ -448,17 +448,17 @@ const EditJob = () => {
             </div>
           </section>
 
-          <div className="flex flex-wrap justify-end gap-3 border-t border-[#e5ece4] pt-6">
+          <div className="flex flex-wrap justify-end gap-3 border-t border-[#eadfe8] pt-6">
             <Link
               to="/recruiter/dashboard"
-              className="rounded-lg border border-[#cddbd0] px-6 py-3 text-sm font-semibold text-[#172b2a] hover:bg-[#edf3e9]"
+              className="rounded-lg border border-[#eadfe8] px-6 py-3 text-sm font-semibold text-[#35253d] hover:bg-[#f4e9f2]"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={saving}
-              className="rounded-lg bg-[#172b2a] px-6 py-3 text-sm font-semibold text-white hover:bg-[#347d61] disabled:opacity-60"
+              className="rounded-lg bg-[#35253d] px-6 py-3 text-sm font-semibold text-white hover:bg-[#593a67] disabled:opacity-60"
             >
               {saving ? "Saving..." : "Save changes"}
             </button>

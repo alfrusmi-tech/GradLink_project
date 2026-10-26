@@ -16,19 +16,19 @@ const Navbar = () => {
   };
 
   const linkClass = ({ isActive }) =>
-    `gradlink-nav-link text-sm font-semibold transition hover:text-[#347d61] ${
-      isActive ? "text-[#347d61]" : "text-[#52645b]"
+    `gradlink-nav-link text-sm font-semibold transition hover:text-[#593a67] ${
+      isActive ? "text-[#593a67]" : "text-[#6f6472]"
     }`;
 
   return (
-    <header className="relative z-20 border-b border-[#e2e9e0] bg-white gradlink-header">
+    <header className="relative z-20 border-b border-[#eadfe8] bg-white gradlink-header">
       <div className="mx-auto flex min-h-[72px] max-w-7xl items-center px-6 md:px-10">
         <Link
           to="/"
           onClick={closeMenu}
-          className="gradlink-logo text-2xl font-extrabold tracking-tight text-[#172b2a]"
+          className="gradlink-logo text-2xl font-extrabold tracking-tight text-[#35253d]"
         >
-          GradLink<span className="text-[#347d61]">.</span>
+          GradLink<span className="text-[#593a67]">.</span>
         </Link>
 
         {/* Desktop navigation */}
@@ -83,7 +83,7 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="rounded-lg border border-[#cddbd0] px-4 py-2 text-sm font-semibold text-[#172b2a] hover:bg-[#edf3e9]"
+                className="rounded-lg border border-[#eadfe8] px-4 py-2 text-sm font-semibold text-[#35253d] hover:bg-[#f4e9f2]"
               >
                 Log out
               </button>
@@ -102,7 +102,7 @@ const Navbar = () => {
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
-          className="gradlink-menu-button ml-auto rounded-lg border border-[#dce7dc] px-3 py-2 text-xl md:hidden"
+          className="gradlink-menu-button ml-auto rounded-lg border border-[#eadfe8] px-3 py-2 text-xl md:hidden"
         >
           {menuOpen ? "✕" : "☰"}
         </button>
@@ -112,7 +112,7 @@ const Navbar = () => {
       {menuOpen && (
         <nav
           id="mobile-navigation"
-          className="flex flex-col gap-5 border-t border-[#e2e9e0] bg-white px-6 py-6 md:hidden"
+          className="flex flex-col gap-5 border-t border-[#eadfe8] bg-white px-6 py-6 md:hidden"
           aria-label="Mobile navigation"
         >
           <NavLink to="/jobs" onClick={closeMenu} className={linkClass}>
@@ -190,7 +190,7 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="self-start rounded-lg bg-[#172b2a] px-5 py-2.5 text-sm font-semibold text-white"
+                className="self-start rounded-lg bg-[#35253d] px-5 py-2.5 text-sm font-semibold text-white"
               >
                 Log out
               </button>

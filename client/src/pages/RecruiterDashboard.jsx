@@ -201,20 +201,20 @@ const RecruiterDashboard = () => {
     {
       label: "Total applicants",
       value: statistics.applicants,
-      valueClass: "text-[#276348]",
+      valueClass: "text-[#473052]",
     },
   ];
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <section className="mb-8 overflow-hidden rounded-2xl bg-gradient-to-r from-[#193b32] to-[#347d61] px-6 py-8 text-white shadow-lg sm:px-8">
+      <section className="mb-8 overflow-hidden rounded-2xl bg-gradient-to-r from-[#593a67] to-[#593a67] px-6 py-8 text-white shadow-lg sm:px-8">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-[#d7e8d9]">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-[#f8e5df]">
               Recruiter workspace
             </p>
             <h1 className="text-3xl font-bold sm:text-4xl">Recruiter Dashboard</h1>
-            <p className="mt-3 max-w-2xl text-sm text-[#d7e8d9] sm:text-base">
+            <p className="mt-3 max-w-2xl text-sm text-[#f8e5df] sm:text-base">
               Manage your company’s job postings, update their status, and review
               applicants from one place.
             </p>
@@ -229,7 +229,7 @@ const RecruiterDashboard = () => {
             </Link>
             <Link
               to="/recruiter/jobs/new"
-              className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-[#276348] shadow-sm transition hover:bg-[#e6f3ea]"
+              className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-[#473052] shadow-sm transition hover:bg-[#f4e9f2]"
             >
               + Post New Job
             </Link>
@@ -282,13 +282,13 @@ const RecruiterDashboard = () => {
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search jobs..."
-                className="rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-[#347d61] focus:ring-2 focus:ring-[#e6f3ea] sm:col-span-2"
+                className="rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-[#593a67] focus:ring-2 focus:ring-[#f4e9f2] sm:col-span-2"
               />
 
               <select
                 value={statusFilter}
                 onChange={(event) => setStatusFilter(event.target.value)}
-                className="rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#347d61]"
+                className="rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#593a67]"
               >
                 {STATUS_OPTIONS.map((status) => (
                   <option key={status} value={status}>
@@ -300,7 +300,7 @@ const RecruiterDashboard = () => {
               <select
                 value={sortBy}
                 onChange={(event) => setSortBy(event.target.value)}
-                className="rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#347d61]"
+                className="rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#593a67]"
               >
                 <option value="newest">Newest first</option>
                 <option value="oldest">Oldest first</option>
@@ -313,7 +313,7 @@ const RecruiterDashboard = () => {
 
         {jobs.length === 0 ? (
           <div className="px-6 py-16 text-center">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#d9eadc] text-2xl">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#f8e5df] text-2xl">
               💼
             </div>
             <h3 className="text-lg font-bold text-gray-900">No jobs posted yet</h3>
@@ -322,7 +322,7 @@ const RecruiterDashboard = () => {
             </p>
             <Link
               to="/recruiter/jobs/new"
-              className="mt-5 inline-flex rounded-xl bg-[#245d4b] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#1a4e3c]"
+              className="mt-5 inline-flex rounded-xl bg-[#755780] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#473052]"
             >
               Post Your First Job
             </Link>
@@ -339,7 +339,7 @@ const RecruiterDashboard = () => {
                 setSearch("");
                 setStatusFilter("all");
               }}
-              className="mt-4 text-sm font-semibold text-[#276348] hover:text-[#276348]"
+              className="mt-4 text-sm font-semibold text-[#473052] hover:text-[#473052]"
             >
               Clear filters
             </button>
@@ -413,7 +413,7 @@ const RecruiterDashboard = () => {
                         onChange={(event) => updateJobStatus(job, event.target.value)}
                         disabled={isUpdating || isDeleting}
                         aria-label={`Change status for ${job.title}`}
-                        className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm font-medium outline-none focus:border-[#347d61] disabled:cursor-not-allowed disabled:opacity-60"
+                        className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm font-medium outline-none focus:border-[#593a67] disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         <option value="open">Open</option>
                         <option value="draft">Draft</option>
@@ -429,7 +429,7 @@ const RecruiterDashboard = () => {
                         </Link>
                         <Link
                           to={`/recruiter/jobs/${job._id}/edit`}
-                          className="rounded-xl border border-[#b6d5be] px-3 py-2 text-center text-sm font-semibold text-[#276348] hover:bg-[#e6f3ea]"
+                          className="rounded-xl border border-[#f8d9d0] px-3 py-2 text-center text-sm font-semibold text-[#473052] hover:bg-[#f4e9f2]"
                         >
                           Edit
                         </Link>
@@ -437,7 +437,7 @@ const RecruiterDashboard = () => {
 
                       <Link
                         to={`/recruiter/jobs/${job._id}/applicants`}
-                        className="rounded-xl bg-[#245d4b] px-3 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#1a4e3c]"
+                        className="rounded-xl bg-[#755780] px-3 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#473052]"
                       >
                         View Applicants ({Number(job.applicantsCount || 0)})
                       </Link>

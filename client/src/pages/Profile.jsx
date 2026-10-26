@@ -66,15 +66,15 @@ const Profile = () => {
   };
 
   const inputClass =
-    "w-full rounded-lg border border-[#dce7dc] bg-[#fafbf8] px-4 py-3 outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20";
+    "w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20";
 
   return (
-    <main className="min-h-screen bg-[#f7f8f4] px-6 py-10 md:px-10">
+    <main className="min-h-screen bg-[#fbf8f5] px-6 py-10 md:px-10">
       <div className="mx-auto max-w-3xl">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#593a67]">
           Your account
         </p>
-        <h1 className="mt-2 text-3xl font-bold text-[#172b2a]">
+        <h1 className="mt-2 text-3xl font-bold text-[#35253d]">
           My profile
         </h1>
         <p className="mt-2 text-sm text-gray-600">
@@ -106,7 +106,7 @@ const Profile = () => {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="mt-8 space-y-5 rounded-xl border border-[#dce7dc] bg-white p-6 md:p-8"
+            className="mt-8 space-y-5 rounded-xl border border-[#eadfe8] bg-white p-6 md:p-8"
           >
             <div>
               <label htmlFor="profile-name" className="mb-2 block text-sm font-semibold">
@@ -187,7 +187,7 @@ const Profile = () => {
             <button
               type="submit"
               disabled={saving}
-              className="rounded-lg bg-[#172b2a] px-6 py-3 text-sm font-semibold text-white hover:bg-[#347d61] disabled:opacity-60"
+              className="rounded-lg bg-[#35253d] px-6 py-3 text-sm font-semibold text-white hover:bg-[#593a67] disabled:opacity-60"
             >
               {saving ? "Saving..." : "Save changes"}
             </button>

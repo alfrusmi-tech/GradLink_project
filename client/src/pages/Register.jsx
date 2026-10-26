@@ -49,28 +49,28 @@ const Register = () => {
 
   return (
     <main className="grid min-h-[calc(100vh-72px)] bg-white md:grid-cols-2">
-      <section className="hidden items-center bg-[#193b32] p-12 text-white md:flex lg:p-20">
+      <section className="hidden items-center bg-[#593a67] p-12 text-white md:flex lg:p-20">
         <div className="max-w-md">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#b9e3c5]">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f8c9bd]">
             Join GradLink
           </p>
           <h1 className="mt-6 text-5xl font-bold leading-tight">
             Make your next move with confidence.
           </h1>
-          <p className="mt-6 leading-8 text-[#c8dcd0]">
+          <p className="mt-6 leading-8 text-[#f3d9d2]">
             Whether you are searching for a role or hiring talent,
             your journey starts here.
           </p>
-          <div className="mt-12 text-6xl text-[#94caa5]"></div>
+          <div className="mt-12 text-6xl text-[#f28c72]"></div>
         </div>
       </section>
 
       <section className="flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#593a67]">
             Get started
           </p>
-          <h2 className="mt-3 text-3xl font-bold text-[#172b2a]">
+          <h2 className="mt-3 text-3xl font-bold text-[#35253d]">
             Create your account
           </h2>
           <p className="mt-2 text-sm text-gray-600">
@@ -102,7 +102,7 @@ const Register = () => {
                 value={form.name}
                 onChange={handleChange}
                 placeholder="Your full name"
-                className="w-full rounded-lg border border-[#dce7dc] bg-[#fafbf8] px-4 py-3 outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20"
+                className="w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20"
               />
             </div>
 
@@ -122,7 +122,7 @@ const Register = () => {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className="w-full rounded-lg border border-[#dce7dc] bg-[#fafbf8] px-4 py-3 outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20"
+                className="w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20"
               />
             </div>
 
@@ -143,7 +143,7 @@ const Register = () => {
                 value={form.password}
                 onChange={handleChange}
                 placeholder="At least 6 characters"
-                className="w-full rounded-lg border border-[#dce7dc] bg-[#fafbf8] px-4 py-3 outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20"
+                className="w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20"
               />
             </div>
 
@@ -164,8 +164,8 @@ const Register = () => {
                   }
                   className={`rounded-lg border px-3 py-3 text-sm font-semibold ${
                     form.role === "jobseeker"
-                      ? "border-[#347d61] bg-[#e6f3ea] text-[#276348]"
-                      : "border-[#dce7dc] text-gray-600 hover:bg-gray-50"
+                      ? "border-[#593a67] bg-[#f4e9f2] text-[#473052]"
+                      : "border-[#eadfe8] text-gray-600 hover:bg-gray-50"
                   }`}
                 >
                   Find a job
@@ -182,8 +182,8 @@ const Register = () => {
                   }
                   className={`rounded-lg border px-3 py-3 text-sm font-semibold ${
                     form.role === "recruiter"
-                      ? "border-[#347d61] bg-[#e6f3ea] text-[#276348]"
-                      : "border-[#dce7dc] text-gray-600 hover:bg-gray-50"
+                      ? "border-[#593a67] bg-[#f4e9f2] text-[#473052]"
+                      : "border-[#eadfe8] text-gray-600 hover:bg-gray-50"
                   }`}
                 >
                   Hire talent
@@ -194,7 +194,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-[#172b2a] px-5 py-3 font-semibold text-white transition hover:bg-[#347d61] disabled:cursor-wait disabled:opacity-60"
+              className="w-full rounded-lg bg-[#35253d] px-5 py-3 font-semibold text-white transition hover:bg-[#593a67] disabled:cursor-wait disabled:opacity-60"
             >
               {loading ? "Creating account..." : "Create account →"}
             </button>
@@ -204,7 +204,7 @@ const Register = () => {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="font-semibold text-[#276348] hover:underline"
+              className="font-semibold text-[#473052] hover:underline"
             >
               Log in
             </Link>

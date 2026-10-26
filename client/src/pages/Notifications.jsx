@@ -34,7 +34,7 @@ const typeColors = {
   application_rejected:
     "bg-red-50 text-red-700",
   new_job_posted:
-    "bg-[#e6f3ea] text-[#276348]",
+    "bg-[#f4e9f2] text-[#473052]",
   general:
     "bg-gray-100 text-gray-700",
 };
@@ -291,7 +291,7 @@ const Notifications = () => {
                 type="button"
                 onClick={markAllAsRead}
                 disabled={actionLoading}
-                className="rounded-lg border border-[#b6d5be] px-4 py-2 text-sm font-semibold text-[#276348] transition hover:bg-[#e6f3ea] disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-lg border border-[#f8d9d0] px-4 py-2 text-sm font-semibold text-[#473052] transition hover:bg-[#f4e9f2] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Mark all as read
               </button>
@@ -341,7 +341,7 @@ const Notifications = () => {
                 className={`rounded-xl border p-4 transition ${
                   notification.isRead
                     ? "border-gray-200 bg-white"
-                    : "border-[#b6d5be] bg-[#e6f3ea]/50"
+                    : "border-[#f8d9d0] bg-[#f4e9f2]/50"
                 }`}
               >
                 <div className="flex items-start justify-between gap-4">
@@ -373,7 +373,7 @@ const Notifications = () => {
 
                       {!notification.isRead && (
                         <span
-                          className="mt-1 h-2.5 w-2.5 flex-shrink-0 rounded-full bg-[#245d4b]"
+                          className="mt-1 h-2.5 w-2.5 flex-shrink-0 rounded-full bg-[#755780]"
                           aria-label="Unread"
                         />
                       )}
@@ -387,7 +387,7 @@ const Notifications = () => {
 
                     {notification
                       .relatedJob?.title && (
-                      <p className="mt-2 text-sm font-semibold text-[#276348]">
+                      <p className="mt-2 text-sm font-semibold text-[#473052]">
                         {
                           notification
                             .relatedJob

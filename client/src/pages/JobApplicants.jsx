@@ -231,7 +231,7 @@ const JobApplicants = () => {
     <main className="mx-auto min-h-screen max-w-5xl px-4 py-8">
       <Link
         to="/recruiter/jobs"
-        className="text-sm font-medium text-[#276348] hover:text-[#276348]"
+        className="text-sm font-medium text-[#473052] hover:text-[#473052]"
       >
         ← Back to My Jobs
       </Link>
@@ -253,12 +253,12 @@ const JobApplicants = () => {
           )}
         </div>
 
-        <div className="w-fit rounded-xl bg-[#e6f3ea] px-5 py-3">
-          <p className="text-xs text-[#276348]">
+        <div className="w-fit rounded-xl bg-[#f4e9f2] px-5 py-3">
+          <p className="text-xs text-[#473052]">
             Total applicants
           </p>
 
-          <p className="text-2xl font-bold text-[#1d4e3d]">
+          <p className="text-2xl font-bold text-[#593a67]">
             {applications.length}
           </p>
         </div>
@@ -396,7 +396,7 @@ const JobApplicants = () => {
                               key={
                                 skill
                               }
-                              className="rounded-full bg-[#e6f3ea] px-3 py-1 text-xs text-[#276348]"
+                              className="rounded-full bg-[#f4e9f2] px-3 py-1 text-xs text-[#473052]"
                             >
                               {
                                 skill
@@ -420,7 +420,7 @@ const JobApplicants = () => {
                         downloadingId ===
                         application._id
                       }
-                      className="rounded-lg border border-[#b6d5be] px-4 py-2 text-sm font-semibold text-[#276348] hover:bg-[#e6f3ea] disabled:cursor-not-allowed disabled:opacity-50"
+                      className="rounded-lg border border-[#f8d9d0] px-4 py-2 text-sm font-semibold text-[#473052] hover:bg-[#f4e9f2] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {downloadingId ===
                       application._id

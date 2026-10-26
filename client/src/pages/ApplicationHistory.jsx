@@ -177,7 +177,7 @@ const ApplicationHistory = () => {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#b6d5be] border-t-[#245d4b]" />
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#f8d9d0] border-t-[#755780]" />
 
           <p className="mt-3 text-sm text-gray-500">
             Loading your applications...
@@ -204,7 +204,7 @@ const ApplicationHistory = () => {
 
         <Link
           to="/jobs"
-          className="inline-flex justify-center rounded-lg bg-[#245d4b] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1a4e3c]"
+          className="inline-flex justify-center rounded-lg bg-[#755780] px-5 py-3 text-sm font-semibold text-white hover:bg-[#473052]"
         >
           Browse more jobs
         </Link>
@@ -224,8 +224,8 @@ const ApplicationHistory = () => {
           }
           className={`rounded-xl border p-4 text-left transition ${
             statusFilter === "all"
-              ? "border-[#347d61] bg-[#e6f3ea]"
-              : "border-gray-200 bg-white hover:border-[#8fbea0]"
+              ? "border-[#593a67] bg-[#f4e9f2]"
+              : "border-gray-200 bg-white hover:border-[#a8bfa3]"
           }`}
         >
           <p className="text-sm text-gray-500">
@@ -336,7 +336,7 @@ const ApplicationHistory = () => {
 
           <Link
             to="/jobs"
-            className="mt-5 inline-flex rounded-lg bg-[#245d4b] px-5 py-3 text-sm font-semibold text-white hover:bg-[#1a4e3c]"
+            className="mt-5 inline-flex rounded-lg bg-[#755780] px-5 py-3 text-sm font-semibold text-white hover:bg-[#473052]"
           >
             Find jobs
           </Link>
@@ -359,7 +359,7 @@ const ApplicationHistory = () => {
             onClick={() =>
               setStatusFilter("all")
             }
-            className="mt-5 rounded-lg border border-[#b6d5be] px-5 py-2 text-sm font-semibold text-[#276348] hover:bg-[#e6f3ea]"
+            className="mt-5 rounded-lg border border-[#f8d9d0] px-5 py-2 text-sm font-semibold text-[#473052] hover:bg-[#f4e9f2]"
           >
             Show all applications
           </button>
@@ -533,7 +533,7 @@ const ApplicationHistory = () => {
                       {job?._id && (
                         <Link
                           to={`/jobs/${job._id}`}
-                          className="rounded-lg bg-[#245d4b] px-4 py-2 text-center text-sm font-semibold text-white hover:bg-[#1a4e3c]"
+                          className="rounded-lg bg-[#755780] px-4 py-2 text-center text-sm font-semibold text-white hover:bg-[#473052]"
                         >
                           View job
                         </Link>
@@ -542,7 +542,7 @@ const ApplicationHistory = () => {
                       {job?._id && (
                         <Link
                           to={`/cv-analysis?jobId=${job._id}`}
-                          className="rounded-lg border border-[#b6d5be] px-4 py-2 text-center text-sm font-semibold text-[#276348] hover:bg-[#e6f3ea]"
+                          className="rounded-lg border border-[#f8d9d0] px-4 py-2 text-center text-sm font-semibold text-[#473052] hover:bg-[#f4e9f2]"
                         >
                           View CV match
                         </Link>

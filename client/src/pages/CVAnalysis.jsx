@@ -68,22 +68,22 @@ const CVAnalysis = () => {
   );
 
   return (
-    <main className="min-h-screen bg-[#f7f8f4] px-6 py-10 md:px-10">
+    <main className="min-h-screen bg-[#fbf8f5] px-6 py-10 md:px-10">
       <div className="mx-auto max-w-4xl">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#593a67]">
           Understand your fit
         </p>
-        <h1 className="mt-2 text-3xl font-bold text-[#172b2a] md:text-4xl">
+        <h1 className="mt-2 text-3xl font-bold text-[#35253d] md:text-4xl">
           CV Match Analysis
         </h1>
         <p className="mt-3 max-w-2xl leading-7 text-gray-600">
           Choose a job to compare its required skills with your uploaded CV.
         </p>
 
-        <div className="mt-8 rounded-xl border border-[#dce7dc] bg-white p-6">
+        <div className="mt-8 rounded-xl border border-[#eadfe8] bg-white p-6">
           <label
             htmlFor="analysis-job"
-            className="mb-2 block text-sm font-semibold text-[#172b2a]"
+            className="mb-2 block text-sm font-semibold text-[#35253d]"
           >
             Select a job
           </label>
@@ -92,7 +92,7 @@ const CVAnalysis = () => {
             value={selectedJobId}
             onChange={handleJobChange}
             disabled={loading || analyzing}
-            className="w-full rounded-lg border border-[#dce7dc] bg-[#fafbf8] px-4 py-3 text-sm outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20 disabled:opacity-60"
+            className="w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 text-sm outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20 disabled:opacity-60"
           >
             <option value="">
               {loading ? "Loading jobs..." : "Choose a job"}
@@ -120,36 +120,36 @@ const CVAnalysis = () => {
         {analyzing && (
           <div
             role="status"
-            className="mt-6 rounded-xl border border-[#dce7dc] bg-white p-8 text-center text-gray-600"
+            className="mt-6 rounded-xl border border-[#eadfe8] bg-white p-8 text-center text-gray-600"
           >
             Analyzing your CV...
           </div>
         )}
 
         {result && !analyzing && (
-          <section className="mt-6 rounded-xl border border-[#dce7dc] bg-white p-6 md:p-8">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+          <section className="mt-6 rounded-xl border border-[#eadfe8] bg-white p-6 md:p-8">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#593a67]">
               Your result
             </p>
             <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
-              <h2 className="text-2xl font-bold text-[#172b2a]">
+              <h2 className="text-2xl font-bold text-[#35253d]">
                 Match with this role
               </h2>
-              <span className="text-4xl font-bold text-[#276348]">
+              <span className="text-4xl font-bold text-[#473052]">
                 {percentage}%
               </span>
             </div>
 
-            <div className="mt-5 h-3 overflow-hidden rounded-full bg-[#e7eee7]">
+            <div className="mt-5 h-3 overflow-hidden rounded-full bg-[#eadfe8]">
               <div
-                className="h-full rounded-full bg-[#347d61]"
+                className="h-full rounded-full bg-[#593a67]"
                 style={{ width: `${percentage}%` }}
               />
             </div>
 
             <div className="mt-8 grid gap-5 md:grid-cols-2">
-              <div className="rounded-lg bg-[#f0f8f1] p-5">
-                <h3 className="font-bold text-[#276348]">
+              <div className="rounded-lg bg-[#f8e5df] p-5">
+                <h3 className="font-bold text-[#473052]">
                   Matching skills
                 </h3>
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -157,7 +157,7 @@ const CVAnalysis = () => {
                     result.matchedSkills.map((skill) => (
                       <span
                         key={skill}
-                        className="rounded-md bg-white px-3 py-2 text-xs text-[#276348]"
+                        className="rounded-md bg-white px-3 py-2 text-xs text-[#473052]"
                       >
                         {skill}
                       </span>
@@ -195,7 +195,7 @@ const CVAnalysis = () => {
 
             {result.suggestions?.length > 0 && (
               <div className="mt-8">
-                <h3 className="font-bold text-[#172b2a]">
+                <h3 className="font-bold text-[#35253d]">
                   Suggestions
                 </h3>
                 <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-7 text-gray-600">
@@ -209,7 +209,7 @@ const CVAnalysis = () => {
             {selectedJobId && (
               <Link
                 to={`/jobs/${selectedJobId}`}
-                className="mt-8 inline-block rounded-lg bg-[#172b2a] px-5 py-3 text-sm font-semibold text-white hover:bg-[#347d61]"
+                className="mt-8 inline-block rounded-lg bg-[#35253d] px-5 py-3 text-sm font-semibold text-white hover:bg-[#593a67]"
               >
                 View job and apply →
               </Link>
@@ -218,7 +218,7 @@ const CVAnalysis = () => {
         )}
 
         {!result && !analyzing && !error && !selectedJobId && (
-          <div className="mt-6 rounded-xl border border-[#dce7dc] bg-white p-8 text-center text-gray-600">
+          <div className="mt-6 rounded-xl border border-[#eadfe8] bg-white p-8 text-center text-gray-600">
             Select a job above to see your CV match.
           </div>
         )}

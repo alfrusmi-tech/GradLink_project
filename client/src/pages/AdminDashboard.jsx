@@ -50,7 +50,7 @@ function StatCard({ title, value, subtitle, icon }) {
           <p className="mt-2 text-3xl font-black text-slate-900">{value ?? 0}</p>
           {subtitle && <p className="mt-1 text-xs text-slate-500">{subtitle}</p>}
         </div>
-        <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#e6f3ea] text-xl">
+        <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#f4e9f2] text-xl">
           {icon}
         </span>
       </div>
@@ -389,16 +389,16 @@ export default function AdminDashboard() {
   }, [statistics]);
 
   return (
-    <main className="min-h-screen bg-[#f7f8f4] px-4 py-8 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#fbf8f5] px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <header className="mb-7 rounded-2xl bg-gradient-to-r from-[#162e28] via-[#1d4938] to-[#347d61] p-6 text-white shadow-xl sm:p-8">
+        <header className="mb-7 rounded-2xl bg-gradient-to-r from-[#35253d] via-[#593a67] to-[#593a67] p-6 text-white shadow-xl sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <p className="text-sm font-bold uppercase tracking-[0.24em] text-[#b9e3c5]">
+              <p className="text-sm font-bold uppercase tracking-[0.24em] text-[#f8c9bd]">
                 GradLink Administration
               </p>
               <h1 className="mt-2 text-3xl font-black sm:text-4xl">Admin Dashboard</h1>
-              <p className="mt-2 max-w-2xl text-sm text-[#d7e8d9] sm:text-base">
+              <p className="mt-2 max-w-2xl text-sm text-[#f8e5df] sm:text-base">
                 Manage users, jobs, companies, account access, and platform activity.
               </p>
             </div>
@@ -406,7 +406,7 @@ export default function AdminDashboard() {
               type="button"
               onClick={refreshCurrentTab}
               disabled={loading}
-              className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-[#1d4e3d] shadow hover:bg-[#e6f3ea] disabled:opacity-60"
+              className="rounded-xl bg-white px-5 py-3 text-sm font-bold text-[#593a67] shadow hover:bg-[#f4e9f2] disabled:opacity-60"
             >
               {loading ? "Refreshing..." : "Refresh data"}
             </button>
@@ -437,7 +437,7 @@ export default function AdminDashboard() {
               }}
               className={`whitespace-nowrap rounded-xl px-5 py-2.5 text-sm font-bold transition ${
                 activeTab === tab.id
-                  ? "bg-[#245d4b] text-white shadow"
+                  ? "bg-[#755780] text-white shadow"
                   : "text-slate-600 hover:bg-slate-100"
               }`}
             >
@@ -508,7 +508,7 @@ export default function AdminDashboard() {
                         </div>
                         <div className="h-2 overflow-hidden rounded-full bg-slate-100">
                           <div
-                            className="h-full rounded-full bg-[#245d4b]"
+                            className="h-full rounded-full bg-[#755780]"
                             style={{ width: `${item.percent}%` }}
                           />
                         </div>
@@ -557,7 +557,7 @@ export default function AdminDashboard() {
                     statistics.recentJobs.map((job) => (
                       <div key={job._id} className="flex items-center justify-between gap-3 p-4">
                         <div className="min-w-0">
-                          <Link to={`/jobs/${job._id}`} className="truncate font-semibold text-slate-900 hover:text-[#276348]">
+                          <Link to={`/jobs/${job._id}`} className="truncate font-semibold text-slate-900 hover:text-[#473052]">
                             {job.title}
                           </Link>
                           <p className="truncate text-sm text-slate-500">
@@ -589,7 +589,7 @@ export default function AdminDashboard() {
                 value={userSearch}
                 onChange={(event) => setUserSearch(event.target.value)}
                 placeholder="Search name or email"
-                className="rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-[#347d61]"
+                className="rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-[#593a67]"
               />
               <select value={userRole} onChange={(event) => setUserRole(event.target.value)} className="rounded-xl border border-slate-300 px-3 py-2.5 text-sm">
                 <option value="">All roles</option>
@@ -602,7 +602,7 @@ export default function AdminDashboard() {
                 <option value="active">Active</option>
                 <option value="disabled">Disabled</option>
               </select>
-              <button className="rounded-xl bg-[#245d4b] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#1a4e3c]">Search users</button>
+              <button className="rounded-xl bg-[#755780] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#473052]">Search users</button>
             </form>
 
             <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -624,7 +624,7 @@ export default function AdminDashboard() {
                       <td className="px-4 py-4">
                         <p className="font-semibold text-slate-900">{user.name}</p>
                         <p className="text-sm text-slate-500">{user.email}</p>
-                        {user.company?.name && <p className="mt-1 text-xs font-medium text-[#276348]">{user.company.name}</p>}
+                        {user.company?.name && <p className="mt-1 text-xs font-medium text-[#473052]">{user.company.name}</p>}
                       </td>
                       <td className="px-4 py-4">
                         <select
@@ -679,14 +679,14 @@ export default function AdminDashboard() {
               onSubmit={(event) => { event.preventDefault(); loadJobs(1); }}
               className="mb-5 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-3"
             >
-              <input value={jobSearch} onChange={(event) => setJobSearch(event.target.value)} placeholder="Search job title" className="rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-[#347d61]" />
+              <input value={jobSearch} onChange={(event) => setJobSearch(event.target.value)} placeholder="Search job title" className="rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-[#593a67]" />
               <select value={jobStatus} onChange={(event) => setJobStatus(event.target.value)} className="rounded-xl border border-slate-300 px-3 py-2.5 text-sm">
                 <option value="">All statuses</option>
                 <option value="open">Open</option>
                 <option value="closed">Closed</option>
                 <option value="draft">Draft</option>
               </select>
-              <button className="rounded-xl bg-[#245d4b] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#1a4e3c]">Search jobs</button>
+              <button className="rounded-xl bg-[#755780] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#473052]">Search jobs</button>
             </form>
 
             <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -704,7 +704,7 @@ export default function AdminDashboard() {
                   ) : jobs.map((job) => (
                     <tr key={job._id} className="hover:bg-slate-50/70">
                       <td className="px-4 py-4">
-                        <Link to={`/jobs/${job._id}`} className="font-semibold text-slate-900 hover:text-[#276348]">{job.title}</Link>
+                        <Link to={`/jobs/${job._id}`} className="font-semibold text-slate-900 hover:text-[#473052]">{job.title}</Link>
                         <p className="text-sm text-slate-500">{job.company?.name || "No company"} · {job.location}</p>
                         <p className="mt-1 text-xs text-slate-400">Created {formatDate(job.createdAt)}</p>
                       </td>
@@ -727,7 +727,7 @@ export default function AdminDashboard() {
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex justify-end gap-2">
-                          <Link to={`/jobs/${job._id}`} className="rounded-lg border border-[#b6d5be] px-3 py-2 text-xs font-bold text-[#276348] hover:bg-[#e6f3ea]">View</Link>
+                          <Link to={`/jobs/${job._id}`} className="rounded-lg border border-[#f8d9d0] px-3 py-2 text-xs font-bold text-[#473052] hover:bg-[#f4e9f2]">View</Link>
                           <button type="button" disabled={Boolean(actionLoading)} onClick={() => deleteJob(job)} className="rounded-lg border border-red-200 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 disabled:opacity-50">Delete</button>
                         </div>
                       </td>
@@ -746,8 +746,8 @@ export default function AdminDashboard() {
               onSubmit={(event) => { event.preventDefault(); loadCompanies(1); }}
               className="mb-5 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-[1fr_auto]"
             >
-              <input value={companySearch} onChange={(event) => setCompanySearch(event.target.value)} placeholder="Search company, industry, or location" className="rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-[#347d61]" />
-              <button className="rounded-xl bg-[#245d4b] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#1a4e3c]">Search companies</button>
+              <input value={companySearch} onChange={(event) => setCompanySearch(event.target.value)} placeholder="Search company, industry, or location" className="rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-[#593a67]" />
+              <button className="rounded-xl bg-[#755780] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#473052]">Search companies</button>
             </form>
 
             <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -767,7 +767,7 @@ export default function AdminDashboard() {
                       <td className="px-4 py-4">
                         <p className="font-semibold text-slate-900">{company.name}</p>
                         <p className="text-sm text-slate-500">{company.location || "No location"}</p>
-                        {company.website && <a href={company.website} target="_blank" rel="noreferrer" className="mt-1 inline-block text-xs font-semibold text-[#276348] hover:underline">Website</a>}
+                        {company.website && <a href={company.website} target="_blank" rel="noreferrer" className="mt-1 inline-block text-xs font-semibold text-[#473052] hover:underline">Website</a>}
                       </td>
                       <td className="px-4 py-4">
                         <p className="text-sm font-medium text-slate-800">{company.owner?.name || "Unknown"}</p>

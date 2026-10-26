@@ -35,28 +35,28 @@ const Login = () => {
 
   return (
     <main className="grid min-h-[calc(100vh-72px)] bg-white md:grid-cols-2">
-      <section className="hidden items-center bg-[#193b32] p-12 text-white md:flex lg:p-20">
+      <section className="hidden items-center bg-[#593a67] p-12 text-white md:flex lg:p-20">
         <div className="max-w-md">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#b9e3c5]">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f8c9bd]">
             Welcome back
           </p>
           <h1 className="mt-6 text-5xl font-bold leading-tight">
             Your next opportunity is waiting.
           </h1>
-          <p className="mt-6 leading-8 text-[#c8dcd0]">
+          <p className="mt-6 leading-8 text-[#f3d9d2]">
             Discover roles, understand your skills, and follow your
             applications from one place.
           </p>
-          <div className="mt-12 text-6xl text-[#94caa5]"></div>
+          <div className="mt-12 text-6xl text-[#f28c72]"></div>
         </div>
       </section>
 
       <section className="flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-md">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#593a67]">
             GradLink
           </p>
-          <h2 className="mt-3 text-3xl font-bold text-[#172b2a]">
+          <h2 className="mt-3 text-3xl font-bold text-[#35253d]">
             Log in to your account
           </h2>
           <p className="mt-2 text-sm text-gray-600">
@@ -76,7 +76,7 @@ const Login = () => {
             <div>
               <label
                 htmlFor="login-email"
-                className="mb-2 block text-sm font-semibold text-[#172b2a]"
+                className="mb-2 block text-sm font-semibold text-[#35253d]"
               >
                 Email address
               </label>
@@ -88,14 +88,14 @@ const Login = () => {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
-                className="w-full rounded-lg border border-[#dce7dc] bg-[#fafbf8] px-4 py-3 outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20"
+                className="w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20"
               />
             </div>
 
             <div>
               <label
                 htmlFor="login-password"
-                className="mb-2 block text-sm font-semibold text-[#172b2a]"
+                className="mb-2 block text-sm font-semibold text-[#35253d]"
               >
                 Password
               </label>
@@ -107,14 +107,14 @@ const Login = () => {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="Enter your password"
-                className="w-full rounded-lg border border-[#dce7dc] bg-[#fafbf8] px-4 py-3 outline-none focus:border-[#347d61] focus:ring-2 focus:ring-[#347d61]/20"
+                className="w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-[#172b2a] px-5 py-3 font-semibold text-white transition hover:bg-[#347d61] disabled:cursor-wait disabled:opacity-60"
+              className="w-full rounded-lg bg-[#35253d] px-5 py-3 font-semibold text-white transition hover:bg-[#593a67] disabled:cursor-wait disabled:opacity-60"
             >
               {loading ? "Logging in..." : "Log in →"}
             </button>
@@ -124,7 +124,7 @@ const Login = () => {
             Don't have an account?{" "}
             <Link
               to="/register"
-              className="font-semibold text-[#276348] hover:underline"
+              className="font-semibold text-[#473052] hover:underline"
             >
               Register
             </Link>

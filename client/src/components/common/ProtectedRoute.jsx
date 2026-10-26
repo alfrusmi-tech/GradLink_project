@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return (
       <div
         role="status"
-        className="flex min-h-[60vh] items-center justify-center bg-[#f7f8f4] text-sm text-[#52645b]"
+        className="flex min-h-[60vh] items-center justify-center bg-[#fbf8f5] text-sm text-[#6f6472]"
       >
         Checking your account...
       </div>

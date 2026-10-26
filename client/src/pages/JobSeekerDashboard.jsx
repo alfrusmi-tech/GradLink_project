@@ -34,14 +34,14 @@ const JobSeekerDashboard = () => {
   ).length;
 
   return (
-    <main className="min-h-screen bg-[#f7f8f4] px-6 py-10 md:px-10">
+    <main className="min-h-screen bg-[#fbf8f5] px-6 py-10 md:px-10">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#593a67]">
               Your workspace
             </p>
-            <h1 className="mt-2 text-3xl font-bold text-[#172b2a] md:text-4xl">
+            <h1 className="mt-2 text-3xl font-bold text-[#35253d] md:text-4xl">
               Dashboard
             </h1>
             <p className="mt-2 text-sm text-gray-600">
@@ -52,13 +52,13 @@ const JobSeekerDashboard = () => {
           <div className="flex flex-wrap gap-3">
             <Link
               to="/upload-cv"
-              className="rounded-lg border border-[#cddbd0] bg-white px-4 py-2.5 text-sm font-semibold text-[#172b2a] hover:bg-[#edf3e9]"
+              className="rounded-lg border border-[#eadfe8] bg-white px-4 py-2.5 text-sm font-semibold text-[#35253d] hover:bg-[#f4e9f2]"
             >
               Manage CV
             </Link>
             <Link
               to="/jobs"
-              className="rounded-lg bg-[#172b2a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#347d61]"
+              className="rounded-lg bg-[#35253d] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#593a67]"
             >
               Browse jobs →
             </Link>
@@ -88,10 +88,10 @@ const JobSeekerDashboard = () => {
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-xl border border-[#dce7dc] bg-white p-6"
+                  className="rounded-xl border border-[#eadfe8] bg-white p-6"
                 >
                   <p className="text-sm text-gray-600">{item.label}</p>
-                  <p className="mt-4 text-4xl font-bold text-[#172b2a]">
+                  <p className="mt-4 text-4xl font-bold text-[#35253d]">
                     {item.value}
                   </p>
                 </div>
@@ -100,24 +100,24 @@ const JobSeekerDashboard = () => {
 
             <div className="mt-12 flex flex-wrap items-end justify-between gap-3">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#347d61]">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#593a67]">
                   Your activity
                 </p>
-                <h2 className="mt-2 text-2xl font-bold text-[#172b2a]">
+                <h2 className="mt-2 text-2xl font-bold text-[#35253d]">
                   Recent applications
                 </h2>
               </div>
               <Link
                 to="/applications/history"
-                className="text-sm font-semibold text-[#276348] hover:underline"
+                className="text-sm font-semibold text-[#473052] hover:underline"
               >
                 View all applications →
               </Link>
             </div>
 
             {recent.length === 0 ? (
-              <div className="mt-5 rounded-xl border border-[#dce7dc] bg-white p-10 text-center">
-                <h3 className="text-lg font-bold text-[#172b2a]">
+              <div className="mt-5 rounded-xl border border-[#eadfe8] bg-white p-10 text-center">
+                <h3 className="text-lg font-bold text-[#35253d]">
                   No applications yet
                 </h3>
                 <p className="mt-2 text-sm text-gray-600">
@@ -125,7 +125,7 @@ const JobSeekerDashboard = () => {
                 </p>
                 <Link
                   to="/jobs"
-                  className="mt-5 inline-block font-semibold text-[#276348] hover:underline"
+                  className="mt-5 inline-block font-semibold text-[#473052] hover:underline"
                 >
                   Explore jobs →
                 </Link>
@@ -140,10 +140,10 @@ const JobSeekerDashboard = () => {
                         ? `/jobs/${application.job._id}`
                         : "/applications/history"
                     }
-                    className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[#dce7dc] bg-white p-5 transition hover:border-[#83b99a] hover:shadow-md"
+                    className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[#eadfe8] bg-white p-5 transition hover:border-[#f28c72] hover:shadow-md"
                   >
                     <div>
-                      <h3 className="font-bold text-[#172b2a]">
+                      <h3 className="font-bold text-[#35253d]">
                         {application.job?.title || "Job unavailable"}
                       </h3>
                       <p className="mt-1 text-sm text-gray-600">

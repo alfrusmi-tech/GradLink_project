@@ -36,7 +36,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#fbf8f5]">
       <Navbar />
 
       <Routes>
