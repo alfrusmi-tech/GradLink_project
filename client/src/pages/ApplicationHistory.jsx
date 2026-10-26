@@ -1,3 +1,4 @@
+
 import {
   useEffect,
   useMemo,
@@ -42,6 +43,9 @@ const ApplicationHistory = () => {
   const [statusFilter, setStatusFilter] =
     useState("all");
 
+  const [viewingCV, setViewingCV] =
+    useState(false);
+
   const fetchApplications = async () => {
     try {
       setLoading(true);
@@ -68,18 +72,68 @@ const ApplicationHistory = () => {
   useEffect(() => {
     if (!user) {
       navigate("/login");
-
       return;
     }
 
     if (user.role !== "jobseeker") {
       navigate("/");
-
       return;
     }
 
     fetchApplications();
   }, [user, navigate]);
+
+  // Secure CV preview
+  const handleViewCV = async () => {
+    setViewingCV(true);
+    setError("");
+
+    const previewTab = window.open(
+      "",
+      "_blank"
+    );
+
+    if (!previewTab) {
+      setError(
+        "Please allow pop-ups to view your CV."
+      );
+      setViewingCV(false);
+      return;
+    }
+
+    try {
+      const response = await api.get(
+        "/cv/me/file",
+        {
+          responseType: "blob",
+        }
+      );
+
+      const pdfBlob = new Blob(
+        [response.data],
+        {
+          type: "application/pdf",
+        }
+      );
+
+      const pdfURL =
+        URL.createObjectURL(pdfBlob);
+
+      previewTab.location.href = pdfURL;
+
+      setTimeout(() => {
+        URL.revokeObjectURL(pdfURL);
+      }, 60000);
+    } catch (requestError) {
+      previewTab.close();
+
+      setError(
+        "Could not open your CV. Please try again."
+      );
+    } finally {
+      setViewingCV(false);
+    }
+  };
 
   const filteredApplications =
     useMemo(() => {
@@ -211,7 +265,10 @@ const ApplicationHistory = () => {
       </div>
 
       {error && (
-        <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div
+          role="alert"
+          className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
           {error}
         </div>
       )}
@@ -260,13 +317,10 @@ const ApplicationHistory = () => {
         <button
           type="button"
           onClick={() =>
-            setStatusFilter(
-              "shortlisted"
-            )
+            setStatusFilter("shortlisted")
           }
           className={`rounded-xl border p-4 text-left transition ${
-            statusFilter ===
-            "shortlisted"
+            statusFilter === "shortlisted"
               ? "border-blue-500 bg-blue-50"
               : "border-gray-200 bg-white hover:border-blue-300"
           }`}
@@ -276,9 +330,7 @@ const ApplicationHistory = () => {
           </p>
 
           <p className="mt-1 text-2xl font-bold text-blue-700">
-            {
-              applicationCounts.shortlisted
-            }
+            {applicationCounts.shortlisted}
           </p>
         </button>
 
@@ -397,15 +449,12 @@ const ApplicationHistory = () => {
                         <span
                           className={`w-fit rounded-full border px-3 py-1 text-xs font-semibold capitalize ${
                             statusStyles[
-                              application
-                                .status
+                              application.status
                             ] ||
                             "border-gray-200 bg-gray-50 text-gray-700"
                           }`}
                         >
-                          {
-                            application.status
-                          }
+                          {application.status}
                         </span>
                       </div>
 
@@ -488,9 +537,7 @@ const ApplicationHistory = () => {
                           </h3>
 
                           <p className="mt-2 whitespace-pre-line text-sm leading-6 text-gray-600">
-                            {
-                              application.coverLetter
-                            }
+                            {application.coverLetter}
                           </p>
                         </div>
                       )}
@@ -513,9 +560,7 @@ const ApplicationHistory = () => {
                                   className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs text-gray-600"
                                 >
                                   <span className="font-medium capitalize">
-                                    {
-                                      history.status
-                                    }
+                                    {history.status}
                                   </span>
                                   {" · "}
                                   {formatDate(
@@ -548,23 +593,17 @@ const ApplicationHistory = () => {
                         </Link>
                       )}
 
-                      {application.cv
-                        ?.fileUrl && (
-                        <a
-                          href={`${
-                            import.meta.env
-                              .VITE_SERVER_URL ||
-                            "http://localhost:5000"
-                          }${
-                            application.cv
-                              .fileUrl
-                          }`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="rounded-lg border border-gray-200 px-4 py-2 text-center text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                      {application.cv && (
+                        <button
+                          type="button"
+                          onClick={handleViewCV}
+                          disabled={viewingCV}
+                          className="rounded-lg border border-gray-200 px-4 py-2 text-center text-sm font-semibold text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                          View submitted CV
-                        </a>
+                          {viewingCV
+                            ? "Opening..."
+                            : "View current CV"}
+                        </button>
                       )}
                     </div>
                   </div>
