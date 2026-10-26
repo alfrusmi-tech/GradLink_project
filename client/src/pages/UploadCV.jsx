@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
@@ -10,11 +11,9 @@ const UploadCV = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [viewing, setViewing] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  const serverURL =
-    import.meta.env.VITE_SERVER_URL || "http://localhost:5000";
 
   useEffect(() => {
     api
@@ -22,7 +21,10 @@ const UploadCV = () => {
       .then((response) => setCv(response.data))
       .catch((err) => {
         if (err.response?.status !== 404) {
-          setError(err.response?.data?.message || "Could not load your CV.");
+          setError(
+            err.response?.data?.message ||
+              "Could not load your CV."
+          );
         }
       })
       .finally(() => setLoading(false));
@@ -60,6 +62,7 @@ const UploadCV = () => {
 
   const handleUpload = async (event) => {
     event.preventDefault();
+
     if (!file) return;
 
     setUploading(true);
@@ -70,26 +73,84 @@ const UploadCV = () => {
       const formData = new FormData();
       formData.append("cv", file);
 
-      const response = await api.post("/cv/upload", formData);
+      const response = await api.post(
+        "/cv/upload",
+        formData
+      );
+
       setCv(response.data.cv);
-      setSuccess(response.data.message || "CV uploaded successfully.");
+      setSuccess(
+        response.data.message ||
+          "CV uploaded successfully."
+      );
+
       setFile(null);
 
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
     } catch (err) {
-      setError(err.response?.data?.message || "CV upload failed.");
+      setError(
+        err.response?.data?.message ||
+          "CV upload failed."
+      );
     } finally {
       setUploading(false);
     }
   };
 
-  const cvUrl = cv?.fileUrl
-    ? cv.fileUrl.startsWith("http")
-      ? cv.fileUrl
-      : `${serverURL}${cv.fileUrl}`
-    : null;
+  // Secure CV preview using authenticated API
+  const handleViewCV = async () => {
+    setViewing(true);
+    setError("");
+
+    // Open a blank tab immediately to avoid popup blocking.
+    const previewTab = window.open(
+      "",
+      "_blank"
+    );
+
+    if (!previewTab) {
+      setError(
+        "Please allow pop-ups to preview your CV."
+      );
+      setViewing(false);
+      return;
+    }
+
+    try {
+      const response = await api.get(
+        "/cv/me/file",
+        {
+          responseType: "blob",
+        }
+      );
+
+      const pdfBlob = new Blob(
+        [response.data],
+        { type: "application/pdf" }
+      );
+
+      const blobURL = URL.createObjectURL(pdfBlob);
+
+      previewTab.location.href = blobURL;
+
+      // Release the temporary URL after the preview
+      // has had time to load.
+      setTimeout(() => {
+        URL.revokeObjectURL(blobURL);
+      }, 60000);
+
+    } catch (err) {
+      previewTab.close();
+
+      setError(
+        "Could not open your CV. Please try again."
+      );
+    } finally {
+      setViewing(false);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-[#fbf8f5] px-6 py-10 md:px-10">
@@ -97,21 +158,29 @@ const UploadCV = () => {
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#593a67]">
           Your career tools
         </p>
+
         <h1 className="mt-2 text-3xl font-bold text-[#35253d]">
           Your CV
         </h1>
+
         <p className="mt-2 max-w-2xl leading-7 text-gray-600">
           Upload your PDF CV to review your skills and compare them with jobs.
         </p>
 
         {error && (
-          <p role="alert" className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <p
+            role="alert"
+            className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+          >
             {error}
           </p>
         )}
 
         {success && (
-          <p role="status" className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700">
+          <p
+            role="status"
+            className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700"
+          >
             {success}
           </p>
         )}
@@ -129,6 +198,7 @@ const UploadCV = () => {
               <h2 className="text-xl font-bold text-[#35253d]">
                 {cv ? "Replace your CV" : "Upload a CV"}
               </h2>
+
               <p className="mt-2 text-sm text-gray-600">
                 PDF files only. Maximum size: 5 MB.
               </p>
@@ -137,13 +207,20 @@ const UploadCV = () => {
                 htmlFor="cv-file"
                 className="mt-6 block cursor-pointer rounded-xl border-2 border-dashed border-[#a9c9af] bg-[#fbf8f5] p-8 text-center hover:bg-[#f8e5df]"
               >
-                <span className="block text-3xl text-[#593a67]">↑</span>
+                <span className="block text-3xl text-[#593a67]">
+                  ↑
+                </span>
+
                 <span className="mt-2 block font-semibold text-[#473052]">
                   Select your PDF CV
                 </span>
+
                 <span className="mt-1 block text-sm text-gray-600">
-                  {file ? file.name : "Click here to choose a file"}
+                  {file
+                    ? file.name
+                    : "Click here to choose a file"}
                 </span>
+
                 <input
                   id="cv-file"
                   ref={fileInputRef}
@@ -174,21 +251,22 @@ const UploadCV = () => {
                     <p className="text-xs font-bold uppercase tracking-widest text-[#593a67]">
                       Current CV
                     </p>
+
                     <h2 className="mt-2 text-xl font-bold text-[#35253d]">
                       {cv.fileName || "Uploaded CV"}
                     </h2>
                   </div>
 
-                  {cvUrl && (
-                    <a
-                      href={cvUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-lg border border-[#a9c9af] px-4 py-2 text-sm font-semibold text-[#473052] hover:bg-[#f8e5df]"
-                    >
-                      View PDF ↗
-                    </a>
-                  )}
+                  <button
+                    type="button"
+                    onClick={handleViewCV}
+                    disabled={viewing}
+                    className="rounded-lg border border-[#a9c9af] px-4 py-2 text-sm font-semibold text-[#473052] hover:bg-[#f8e5df] disabled:opacity-50"
+                  >
+                    {viewing
+                      ? "Opening..."
+                      : "View PDF ↗"}
+                  </button>
                 </div>
 
                 <div className="mt-8">
@@ -198,19 +276,21 @@ const UploadCV = () => {
 
                   {cv.extractedSkills?.length ? (
                     <div className="mt-3 flex flex-wrap gap-2">
-                      {cv.extractedSkills.map((skill) => (
-                        <span
-                          key={skill}
-                          className="rounded-md bg-[#f4e9f2] px-3 py-2 text-xs font-medium text-[#473052]"
-                        >
-                          {skill}
-                        </span>
-                      ))}
+                      {cv.extractedSkills.map(
+                        (skill) => (
+                          <span
+                            key={skill}
+                            className="rounded-md bg-[#f4e9f2] px-3 py-2 text-xs font-medium text-[#473052]"
+                          >
+                            {skill}
+                          </span>
+                        )
+                      )}
                     </div>
                   ) : (
                     <p className="mt-2 text-sm text-gray-600">
-                      No skills were detected. Check that your CV has a clear
-                      skills section.
+                      No skills were detected. Check that
+                      your CV has a clear skills section.
                     </p>
                   )}
                 </div>
@@ -227,6 +307,7 @@ const UploadCV = () => {
                 <h2 className="font-bold text-[#35253d]">
                   No CV uploaded yet
                 </h2>
+
                 <p className="mt-2 text-sm text-gray-600">
                   Choose a PDF above to get started.
                 </p>
