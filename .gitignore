@@ -22,3 +22,6 @@ server/uploads/*
 # Editor and system files
 .DS_Store
 Thumbs.db
+# Local backups and editor settings
+*.backup
+.vscode/
