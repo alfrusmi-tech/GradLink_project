@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import FieldError from "../components/common/FieldError";
+import { normalizeServerErrors, validateRegister } from "../utils/validators";
+
+const normalInput =
+  "w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20";
+const errorInput =
+  "w-full rounded-lg border border-red-400 bg-[#fffcfa] px-4 py-3 outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -10,21 +17,36 @@ const Register = () => {
     role: "jobseeker",
   });
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  const inputProps = (name) => ({
+    className: fieldErrors[name] ? errorInput : normalInput,
+    "aria-invalid": Boolean(fieldErrors[name]),
+    "aria-describedby": fieldErrors[name] ? `register-${name}-error` : undefined,
+  });
+
   const handleChange = (event) => {
-    setForm((current) => ({
-      ...current,
-      [event.target.name]: event.target.value,
-    }));
+    const { name, value } = event.target;
+
+    setForm((current) => ({ ...current, [name]: value }));
+    setFieldErrors((current) => ({ ...current, [name]: undefined }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
+
+    const validationErrors = validateRegister(form);
+    setFieldErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -39,9 +61,17 @@ const Register = () => {
         user.role === "recruiter" ? "/recruiter/dashboard" : "/jobs"
       );
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Registration failed. Please try again."
-      );
+      const serverErrors = normalizeServerErrors(err.response?.data?.errors);
+      const message =
+        err.response?.data?.message || "Registration failed. Please try again.";
+
+      if (Object.keys(serverErrors).length > 0) {
+        setFieldErrors(serverErrors);
+      } else if (/already exists/i.test(message)) {
+        setFieldErrors({ email: message });
+      } else {
+        setError(message);
+      }
     } finally {
       setLoading(false);
     }
@@ -86,7 +116,7 @@ const Register = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-5">
             <div>
               <label
                 htmlFor="register-name"
@@ -102,8 +132,9 @@ const Register = () => {
                 value={form.name}
                 onChange={handleChange}
                 placeholder="Your full name"
-                className="w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20"
+                {...inputProps("name")}
               />
+              <FieldError id="register-name-error" message={fieldErrors.name} />
             </div>
 
             <div>
@@ -122,8 +153,9 @@ const Register = () => {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className="w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20"
+                {...inputProps("email")}
               />
+              <FieldError id="register-email-error" message={fieldErrors.email} />
             </div>
 
             <div>
@@ -139,12 +171,12 @@ const Register = () => {
                 type="password"
                 autoComplete="new-password"
                 required
-                minLength={6}
                 value={form.password}
                 onChange={handleChange}
-                placeholder="At least 6 characters"
-                className="w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20"
+                placeholder="At least 6 characters, with a letter and a number"
+                {...inputProps("password")}
               />
+              <FieldError id="register-password-error" message={fieldErrors.password} />
             </div>
 
             <fieldset>
