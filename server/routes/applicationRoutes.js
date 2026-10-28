@@ -1,4 +1,3 @@
-
 import express from "express";
 import mongoose from "mongoose";
 import path from "node:path";
@@ -11,6 +10,8 @@ import Notification from "../models/Notification.js";
 
 import { protect } from "../middleware/authMiddleware.js";
 import { authorize } from "../middleware/roleMiddleware.js";
+import { validate } from "../middleware/validate.js";
+import { applyRules } from "../validators/applicationValidators.js";
 
 const router = express.Router();
 
@@ -32,6 +33,8 @@ router.post(
   "/",
   protect,
   authorize("jobseeker"),
+  applyRules,
+  validate,
   async (req, res, next) => {
     if (!mongoose.isValidObjectId(req.body?.jobId)) {
       return res.status(400).json({
@@ -448,7 +451,6 @@ router.get(
 );
 
 export default router;
-
 
 
 
