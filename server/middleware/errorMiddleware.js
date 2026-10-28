@@ -77,6 +77,19 @@ export const errorHandler = (err, req, res, next) => {
       .map((val) => val.message)
       .join(", ");
   }
+    // ==========================================
+  // MALFORMED OR OVERSIZED REQUEST BODY
+  // ==========================================
+
+  if (err.type === "entity.parse.failed") {
+    statusCode = 400;
+    message = "Request body contains invalid JSON";
+  }
+
+  if (err.type === "entity.too.large") {
+    statusCode = 413;
+    message = "Request body is too large";
+  }
 
   // ==========================================
   // FINAL ERROR RESPONSE
