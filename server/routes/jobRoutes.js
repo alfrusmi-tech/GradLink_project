@@ -16,20 +16,8 @@ const router = express.Router();
 // ==========================================
 
 const fields = [
-  "title",
-  "description",
-  "responsibilities",
-  "requiredSkills",
-  "preferredSkills",
-  "experienceLevel",
-  "experienceYears",
-  "location",
-  "jobType",
-  "salaryMin",
-  "salaryMax",
-  "education",
-  "status",
-  "deadline",
+  "title", "description","responsibilities","requiredSkills","preferredSkills","experienceLevel","experienceYears",
+  "location","jobType","salaryMin","salaryMax","education","status","deadline",
 ];
 
 const pick = (body) =>
@@ -66,6 +54,30 @@ const activeJobFilter = () => ({
     { deadline: { $gte: new Date() } },
   ],
 });
+ 
+// ==========================================
+// SEARCH / FILTER / SORT HELPERS
+// ==========================================
+ 
+// Escape user input before building a RegExp,
+// so searches such as "c++" do not crash.
+const escapeRegex = (value) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+ 
+const JOB_TYPES = [
+  "full-time", "part-time", "contract", "internship", "remote",
+];
+ 
+const EXPERIENCE_LEVELS = [
+  "entry", "junior", "mid", "senior", "lead",
+];
+ 
+const SORT_OPTIONS = {
+  newest: { createdAt: -1 },
+  oldest: { createdAt: 1 },
+  salary_high: { salaryMax: -1, createdAt: -1 },
+  title_az: { title: 1 },
+};
 
 // ==========================================
 // 1. RECRUITER - GET MY JOBS
@@ -134,23 +146,89 @@ router.get(
 );
 
 // ==========================================
-// 3. PUBLIC - GET ACTIVE JOBS
+// 3. PUBLIC - SEARCH, FILTER, SORT AND PAGINATE ACTIVE JOBS
 // ==========================================
-
+ 
 // Expired jobs are automatically excluded.
-
+ 
 router.get("/", async (req, res, next) => {
   try {
-    const jobs = await Job.find(
-      activeJobFilter()
-    )
-      .populate(
-        "company",
-        "name logo location"
-      )
-      .sort({ createdAt: -1 });
-
-    return res.json(jobs);
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+    const limit = Math.min(
+      Math.max(parseInt(req.query.limit) || 9, 1),
+      100
+    );
+ 
+    const term = String(req.query.q || "").trim();
+    const location = String(req.query.location || "").trim();
+    const jobType = String(req.query.jobType || "");
+    const experienceLevel = String(req.query.experienceLevel || "");
+    const sortKey = String(req.query.sort || "newest");
+    const minSalary = Number(req.query.minSalary);
+ 
+    // activeJobFilter() already uses $or for the deadline,
+    // so every condition is combined with $and.
+    const conditions = [activeJobFilter()];
+ 
+    if (term) {
+      const regex = new RegExp(escapeRegex(term), "i");
+ 
+      // Company name lives in another collection,
+      // so look up matching company ids first.
+      const companies = await Company.find({ name: regex }).select("_id");
+ 
+      conditions.push({
+        $or: [
+          { title: regex },
+          { location: regex },
+          { requiredSkills: regex },
+          { company: { $in: companies.map((c) => c._id) } },
+        ],
+      });
+    }
+ 
+    if (location) {
+      conditions.push({
+        location: new RegExp(escapeRegex(location), "i"),
+      });
+    }
+ 
+    if (JOB_TYPES.includes(jobType)) {
+      conditions.push({ jobType });
+    }
+ 
+    if (EXPERIENCE_LEVELS.includes(experienceLevel)) {
+      conditions.push({ experienceLevel });
+    }
+ 
+    if (Number.isFinite(minSalary) && minSalary > 0) {
+      conditions.push({ salaryMax: { $gte: minSalary } });
+    }
+ 
+    const filter = { $and: conditions };
+    const sort = SORT_OPTIONS[sortKey] || SORT_OPTIONS.newest;
+ 
+    const [jobs, total] = await Promise.all([
+      Job.find(filter)
+        .populate("company", "name logo location")
+        .sort(sort)
+        .skip((page - 1) * limit)
+        .limit(limit),
+      Job.countDocuments(filter),
+    ]);
+ 
+    const totalPages = Math.max(Math.ceil(total / limit), 1);
+ 
+    return res.json({
+      jobs,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        total,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    });
   } catch (error) {
     next(error);
   }

@@ -17,9 +17,9 @@ const CVAnalysis = () => {
 
   useEffect(() => {
     api
-      .get("/jobs")
+      .get("/jobs",{params :{limit:100}})
       .then((response) => {
-        setJobs(Array.isArray(response.data) ? response.data : []);
+        setJobs(response.data.jobs || []);
       })
       .catch(() => setError("Could not load jobs."))
       .finally(() => setLoading(false));
