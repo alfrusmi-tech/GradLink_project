@@ -373,20 +373,30 @@ export default function AdminDashboard() {
     }
   };
 
-  const applicationPercentages = useMemo(() => {
-    const applications = statistics?.applications;
-    if (!applications?.total) return [];
-    return [
-      ["Pending", applications.pending],
-      ["Shortlisted", applications.shortlisted],
-      ["Accepted", applications.accepted],
-      ["Rejected", applications.rejected],
-    ].map(([label, value]) => ({
+ 
+const applicationPercentages = useMemo(() => {
+  const applications = statistics?.applications;
+
+  const total = Number(applications?.total) || 0;
+
+  if (total <= 0) return [];
+
+  return [
+    ["Pending", applications?.pending],
+    ["Shortlisted", applications?.shortlisted],
+    ["Accepted", applications?.accepted],
+    ["Rejected", applications?.rejected],
+  ].map(([label, value]) => {
+    const count = Number(value) || 0;
+
+    return {
       label,
-      value,
-      percent: Math.round((value / applications.total) * 100),
-    }));
-  }, [statistics]);
+      value: count,
+      percent: Math.round((count / total) * 100),
+    };
+  });
+}, [statistics]);
+
 
   return (
     <main className="min-h-screen bg-[#fbf8f5] px-4 py-8 sm:px-6 lg:px-8">

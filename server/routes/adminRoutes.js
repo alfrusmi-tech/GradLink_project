@@ -56,7 +56,7 @@ router.get("/statistics", async (req, res, next) => {
     const [
       totalUsers, activeUsers, jobSeekers, recruiters, admins,
       totalJobs, openJobs, draftJobs, closedJobs,
-      totalApps, acceptedApps, totalCompanies,
+      totalApps, pendingApps, shortlistedApps, acceptedApps, rejectedApps, totalCompanies,
       recentUsers, recentJobs,
     ] = await Promise.all([
       User.countDocuments(),
@@ -69,7 +69,10 @@ router.get("/statistics", async (req, res, next) => {
       Job.countDocuments({ status: "draft" }),
       Job.countDocuments({ status: "closed" }),
       Application.countDocuments(),
+      Application.countDocuments({ status: "pending" }),
+      Application.countDocuments({ status: "shortlisted" }),
       Application.countDocuments({ status: "accepted" }),
+      Application.countDocuments({ status: "rejected" }),
       Company.countDocuments(),
       User.find().sort({ createdAt: -1 }).limit(5).select("name email role createdAt"),
       Job.find().sort({ createdAt: -1 }).limit(5)
@@ -83,7 +86,7 @@ router.get("/statistics", async (req, res, next) => {
         jobSeekers, recruiters, admins,
       },
       jobs: { total: totalJobs, open: openJobs, draft: draftJobs, closed: closedJobs },
-      applications: { total: totalApps, accepted: acceptedApps },
+      applications: { total: totalApps, pending: pendingApps, shortlisted: shortlistedApps, accepted: acceptedApps, rejected: rejectedApps },
       companies: { total: totalCompanies },
       recentUsers,
       recentJobs,
