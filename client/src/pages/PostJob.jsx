@@ -1,6 +1,17 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
+import FieldError from "../components/common/FieldError";
+import { normalizeServerErrors, splitList, validateJob } from "../utils/validators";
+
+const FORM_FIELDS = [
+  "title",
+  "description",
+  "requiredSkills",
+  "location",
+  "salaryMin",
+  "salaryMax",
+];
 
 const PostJob = () => {
   const navigate = useNavigate();
@@ -16,25 +27,24 @@ const PostJob = () => {
     salaryMax: "",
   });
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [saving, setSaving] = useState(false);
 
   const handleChange = (event) => {
-    setForm((current) => ({
-      ...current,
-      [event.target.name]: event.target.value,
-    }));
+    const { name, value } = event.target;
+
+    setForm((current) => ({ ...current, [name]: value }));
+    setFieldErrors((current) => ({ ...current, [name]: undefined }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
 
-    if (
-      form.salaryMin &&
-      form.salaryMax &&
-      Number(form.salaryMax) < Number(form.salaryMin)
-    ) {
-      setError("Maximum salary must be greater than minimum salary.");
+    const validationErrors = validateJob(form);
+    setFieldErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
       return;
     }
 
@@ -43,14 +53,8 @@ const PostJob = () => {
     try {
       await api.post("/jobs", {
         ...form,
-        requiredSkills: form.requiredSkills
-          .split(",")
-          .map((skill) => skill.trim())
-          .filter(Boolean),
-        preferredSkills: form.preferredSkills
-          .split(",")
-          .map((skill) => skill.trim())
-          .filter(Boolean),
+        requiredSkills: splitList(form.requiredSkills),
+        preferredSkills: splitList(form.preferredSkills),
         salaryMin: form.salaryMin
           ? Number(form.salaryMin)
           : undefined,
@@ -61,7 +65,16 @@ const PostJob = () => {
 
       navigate("/recruiter/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Could not post the job.");
+      const serverErrors = normalizeServerErrors(err.response?.data?.errors);
+      const hasUnknownField = Object.keys(serverErrors).some(
+        (key) => !FORM_FIELDS.includes(key)
+      );
+
+      setFieldErrors(serverErrors);
+
+      if (Object.keys(serverErrors).length === 0 || hasUnknownField) {
+        setError(err.response?.data?.message || "Could not post the job.");
+      }
     } finally {
       setSaving(false);
     }
@@ -69,6 +82,11 @@ const PostJob = () => {
 
   const inputClass =
     "w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20";
+
+  const errorClass =
+    "w-full rounded-lg border border-red-400 bg-[#fffcfa] px-4 py-3 outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200";
+
+  const fieldClass = (name) => (fieldErrors[name] ? errorClass : inputClass);
 
   return (
     <main className="min-h-screen bg-[#fbf8f5] px-6 py-10 md:px-10">
@@ -101,6 +119,7 @@ const PostJob = () => {
 
         <form
           onSubmit={handleSubmit}
+          noValidate
           className="mt-8 space-y-5 rounded-xl border border-[#eadfe8] bg-white p-6 md:p-8"
         >
           <div>
@@ -114,8 +133,9 @@ const PostJob = () => {
               value={form.title}
               onChange={handleChange}
               placeholder="Junior Frontend Developer"
-              className={inputClass}
+              className={fieldClass("title")}
             />
+            <FieldError message={fieldErrors.title} />
           </div>
 
           <div>
@@ -130,8 +150,9 @@ const PostJob = () => {
               value={form.description}
               onChange={handleChange}
               placeholder="Describe the role and responsibilities..."
-              className={inputClass}
+              className={fieldClass("description")}
             />
+            <FieldError message={fieldErrors.description} />
           </div>
 
           <div>
@@ -145,8 +166,9 @@ const PostJob = () => {
               value={form.requiredSkills}
               onChange={handleChange}
               placeholder="React, JavaScript, CSS"
-              className={inputClass}
+              className={fieldClass("requiredSkills")}
             />
+            <FieldError message={fieldErrors.requiredSkills} />
             <p className="mt-1 text-xs text-gray-500">
               Separate skills with commas.
             </p>
@@ -178,8 +200,9 @@ const PostJob = () => {
                 value={form.location}
                 onChange={handleChange}
                 placeholder="Colombo, Sri Lanka"
-                className={inputClass}
+                className={fieldClass("location")}
               />
+              <FieldError message={fieldErrors.location} />
             </div>
 
             <div>
@@ -233,8 +256,9 @@ const PostJob = () => {
                 min="0"
                 value={form.salaryMin}
                 onChange={handleChange}
-                className={inputClass}
+                className={fieldClass("salaryMin")}
               />
+              <FieldError message={fieldErrors.salaryMin} />
             </div>
 
             <div>
@@ -248,8 +272,9 @@ const PostJob = () => {
                 min="0"
                 value={form.salaryMax}
                 onChange={handleChange}
-                className={inputClass}
+                className={fieldClass("salaryMax")}
               />
+              <FieldError message={fieldErrors.salaryMax} />
             </div>
           </div>
 

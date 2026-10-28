@@ -1,19 +1,44 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import FieldError from "../components/common/FieldError";
+import { normalizeServerErrors, validateLogin } from "../utils/validators";
+
+const normalInput =
+  "w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20";
+const errorInput =
+  "w-full rounded-lg border border-red-400 bg-[#fffcfa] px-4 py-3 outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const inputProps = (name) => ({
+    className: fieldErrors[name] ? errorInput : normalInput,
+    "aria-invalid": Boolean(fieldErrors[name]),
+    "aria-describedby": fieldErrors[name] ? `login-${name}-error` : undefined,
+  });
+
+  const clearFieldError = (name) =>
+    setFieldErrors((current) => ({ ...current, [name]: undefined }));
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
+
+    const validationErrors = validateLogin({ email, password });
+    setFieldErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -27,7 +52,13 @@ const Login = () => {
         navigate("/jobseeker/dashboard");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Please try again.");
+      const serverErrors = normalizeServerErrors(err.response?.data?.errors);
+
+      if (Object.keys(serverErrors).length > 0) {
+        setFieldErrors(serverErrors);
+      } else {
+        setError(err.response?.data?.message || "Login failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -72,7 +103,7 @@ const Login = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-5">
             <div>
               <label
                 htmlFor="login-email"
@@ -86,10 +117,14 @@ const Login = () => {
                 autoComplete="email"
                 required
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  clearFieldError("email");
+                }}
                 placeholder="you@example.com"
-                className="w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20"
+                {...inputProps("email")}
               />
+              <FieldError id="login-email-error" message={fieldErrors.email} />
             </div>
 
             <div>
@@ -105,10 +140,14 @@ const Login = () => {
                 autoComplete="current-password"
                 required
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  clearFieldError("password");
+                }}
                 placeholder="Enter your password"
-                className="w-full rounded-lg border border-[#eadfe8] bg-[#fffcfa] px-4 py-3 outline-none focus:border-[#593a67] focus:ring-2 focus:ring-[#593a67]/20"
+                {...inputProps("password")}
               />
+              <FieldError id="login-password-error" message={fieldErrors.password} />
             </div>
 
             <button
