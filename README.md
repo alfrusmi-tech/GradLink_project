@@ -1,38 +1,22 @@
 # GradLink
 
-GradLink is a MERN job portal project. 
-Recruiters post and manage jobs, job seekers search and apply with their CV, and admins oversee the whole platform.
+GradLink is a full-stack job portal application
+developed using the MERN stack. It connects job
+seekers, recruiters, and administrators through
+a centralized platform.
 
-**Author:** <Rusmi A.L.F>
+The application supports user authentication,
+job management, job applications, CV uploads,
+CV analysis, and notifications.
 
-## Tech stack
+## Project Overview
 
-| Layer | Technology |
-|---|---|
-| Frontend | React 19, Vite, Tailwind CSS, React Router, Axios |
-| Backend | Node.js, Express, express-validator |
-| Database | MongoDB (Mongoose) |
-| Auth | JWT, bcrypt |
-| Files | Multer (local `uploads/`), optional Cloudinary |
-
-## Features
-
-**Job seeker:** register/login, search, filter, sort and paginate jobs, view job details, upload a CV, analyse CV match against a job, apply with a cover letter, track application status, receive notifications.
-
-**Recruiter:** create a company profile, post, edit, close and delete jobs, review applicants, download CVs, shortlist/accept/reject applications.
-
-**Admin:** dashboard statistics; manage users (enable/disable, change role, delete), jobs and companies.
-
-## CRUD coverage (main entity: Job)
-
-| Operation | Endpoint | UI |
-|---|---|---|
-| Create | `POST /api/jobs` | Post a job |
-| Read | `GET /api/jobs` (search, filter, sort, pagination), `GET /api/jobs/:id` | Jobs list, job details |
-| Update | `PUT /api/jobs/:id` | Edit job |
-| Delete | `DELETE /api/jobs/:id` (blocked if the job has applications) | Recruiter dashboard |
-
-Applications, companies, users and CVs also support create, read and update operations.
+- Frontend: React + Vite + Tailwind CSS
+- Backend: Node.js + Express.js
+- Database: MongoDB + Mongoose
+- Authentication: JWT + bcrypt
+- File Handling: Multer + PDF parsing
+- API Communication: Axios
 
 ## Project structure
 
@@ -60,8 +44,10 @@ GradLink/
 
 ### Prerequisites
 
-- Node.js 18 or later
-- A MongoDB **replica set** (MongoDB Atlas free tier works). Applying for a job uses a database transaction, which a standalone local `mongod` does not support.
+- Node.js (v18 or newer)
+- npm
+- MongoDB Atlas or a compatible MongoDB instance
+- Git
 
 ### 1. Clone
 
@@ -93,77 +79,43 @@ cd client
 npm install
 npm run dev
 ```
+### 4. Production Build
+
+```bash
+cd client
+npm run build
+```
 
 The app runs on `http://localhost:5173`.
 
-### 4. Create an admin account
+## Main Features
 
-Register normally, then in MongoDB Compass or mongosh:
+- User registration and login
+- Role-based dashboards
+- Job posting and management
+- Job searching, filtering, and sorting
+- CV upload and analysis
+- Job applications and status tracking
+- Notifications
+- Admin management
 
-```js
-db.users.updateOne({ email: "you@example.com" }, { $set: { role: "admin" } })
-```
+## CRUD Operations
 
-Log out and log in again.
+GradLink implements complete CRUD operations
+for the Job entity.
 
-## Environment variables (`server/.env`)
+- Create: Recruiters can post new jobs.
+- Read: Users can browse and search jobs.
+- Update: Recruiters can edit existing jobs.
+- Delete: Recruiters can delete jobs.
 
-| Variable | Description |
-|---|---|
-| `PORT` | API port (default 5000) |
-| `NODE_ENV` | `development` or `production` |
-| `MONGO_URI` | MongoDB connection string |
-| `JWT_SECRET` | Long random secret for signing tokens |
-| `JWT_EXPIRES_IN` | Token lifetime, e.g. `7d` |
-| `CLIENT_URL` | Frontend URL allowed by CORS |
-| `STORAGE_PROVIDER` | `local` or `cloudinary` |
-| `CLOUDINARY_*` | Only if `STORAGE_PROVIDER=cloudinary` |
+All job information is stored in MongoDB.
 
-Never commit `.env`.
+## Notes
 
-## API overview
-
-| Area | Endpoints |
-|---|---|
-| Auth | `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/me` |
-| Jobs | `GET /api/jobs`, `GET /api/jobs/:id`, `POST /api/jobs`, `PUT /api/jobs/:id`, `DELETE /api/jobs/:id`, `GET /api/jobs/recruiter/mine` |
-| Applications | `POST /api/applications`, `GET /api/applications/me`, `GET /api/applications/job/:jobId`, `PUT /api/applications/:id/status`, `GET /api/applications/:id/cv` |
-| Companies | `POST /api/companies`, `GET /api/companies/:id`, `PUT /api/companies/:id` |
-| Admin | `/api/admin/statistics`, `/users`, `/jobs`, `/companies` |
-
-`GET /api/jobs` query parameters: `q`, `location`, `jobType`, `experienceLevel`, `minSalary`, `sort` (`newest`, `oldest`, `salary_high`, `title_az`), `page`, `limit`.
-
-## Validation and error handling
-
-- **Client:** field-level messages for register, login and post-job forms (`client/src/utils/validators.js`).
-- **Server:** express-validator rules in `server/validators/`, returning `400` with `{ message, errors }`.
-- Central error middleware handles Mongoose errors, invalid JSON and unknown routes. Stack traces are hidden in production.
-- Role-based access: each protected route checks the JWT and the user's role.
-
-## Database design
-
-![ERD](docs/erd.png)
-
-Six collections: `users`, `companies`, `jobs`, `applications`, `cvs`, `notifications`.
-
-- `applications` has a unique index on `(job, applicant)`, so a user can apply to a job only once.
-- `jobs` has a text index on title, skills and location.
-- Passwords are stored as bcrypt hashes and excluded from queries by default.
-
-## Screenshots
-
-| Page | Screenshot |
-|---|---|
-| Login / Register | ![Login](docs/screenshots/login.png) |
-| Jobs with search and filters | ![Jobs](docs/screenshots/jobs.png) |
-| Job details and apply | ![Job details](docs/screenshots/job-details.png) |
-| Recruiter dashboard | ![Recruiter](docs/screenshots/recruiter-dashboard.png) |
-| Post job (with validation errors) | ![Post job](docs/screenshots/post-job.png) |
-| Applicants | ![Applicants](docs/screenshots/applicants.png) |
-| Admin dashboard | ![Admin](docs/screenshots/admin.png) |
-| Mobile view | ![Mobile](docs/screenshots/mobile.png) |
-
-## Known limitations
-
-- Deleting a user or job in the admin area removes related data but does not delete uploaded CV files from disk.
-- Email verification and password reset are not implemented yet.
+- Ensure MongoDB is connected before using the application.
+- Configure environment variables before starting the backend.
+- Keep `.env` files and uploaded personal files out of Git.
+- Use a secure JWT secret.
+- Application transactions require a MongoDB replica set,
+  such as MongoDB Atlas.
